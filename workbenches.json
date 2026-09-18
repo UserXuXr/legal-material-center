@@ -1,0 +1,90 @@
+{
+  "title": "测试案例素材中心",
+  "workbenches": [
+    {
+      "id": "certificates",
+      "name": "企业证照",
+      "subtitle": "企业身份与经营资格",
+      "description": "按证照种类、签发日期及地区选择版式，填写后预览并保存。",
+      "documents": [
+        "营业执照",
+        "建筑业企业资质",
+        "安全生产许可证"
+      ],
+      "outputs": "PDF · PNG · 填写方案",
+      "directory": "素材中心",
+      "url": "http://127.0.0.1:3016/",
+      "health_path": "/material-center.json",
+      "health_key": "workbench",
+      "health_value": "certificates-browser",
+      "runtime": "node",
+      "args": [
+        "node_modules/vite/bin/vite.js",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "3016",
+        "--strictPort"
+      ],
+      "entry_path": "/certificates/"
+    },
+    {
+      "id": "finance",
+      "name": "财务材料",
+      "subtitle": "交易、资金与会计记录",
+      "description": "用同一批交易生成关联单据，补全日常流水，并检查金额与余额。",
+      "documents": [
+        "发票",
+        "银行回单",
+        "银行流水",
+        "会计凭证"
+      ],
+      "outputs": "PDF · PNG · SVG · Excel · CSV",
+      "directory": "财务素材工作台",
+      "url": "http://localhost:3000/",
+      "health_path": "/material-center.json",
+      "health_key": "workbench",
+      "health_value": "finance",
+      "runtime": "node",
+      "args": [
+        "node_modules/vinext/dist/cli.js",
+        "dev",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "3000",
+        "--strictPort"
+      ]
+    },
+    {
+      "id": "rights",
+      "name": "权属登记",
+      "subtitle": "知识产权、产权与担保",
+      "description": "分类制作登记证书、登记副本及证明，选择样式并导出整组材料。",
+      "documents": [
+        "专利",
+        "商标",
+        "软件著作权",
+        "不动产",
+        "担保登记",
+        "机动车抵押"
+      ],
+      "outputs": "PDF · PNG · SVG · 素材包",
+      "directory": "权属登记素材工作台",
+      "url": "http://localhost:3012/",
+      "health_path": "/material-center.json",
+      "health_key": "workbench",
+      "health_value": "rights",
+      "runtime": "node",
+      "args": [
+        "node_modules/vinext/dist/cli.js",
+        "dev",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "3012",
+        "--strictPort"
+      ]
+    }
+  ]
+}

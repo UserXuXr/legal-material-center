@@ -1,0 +1,10 @@
+local_data/
+__pycache__/
+tests/__pycache__/
+
+node_modules/
+work/
+dist/
+.DS_Store
+
+/node_modules

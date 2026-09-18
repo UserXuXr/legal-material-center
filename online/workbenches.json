@@ -1,0 +1,54 @@
+[
+  {
+    "id": "certificates",
+    "name": "企业证照",
+    "subtitle": "企业身份与经营资格",
+    "description": "按日期选择证照版式，实时预览填写内容，直接下载文书与图片。",
+    "documents": [
+      "营业执照",
+      "建筑业企业资质",
+      "安全生产许可证"
+    ],
+    "outputs": "PDF · PNG · SVG · 填写方案"
+  },
+  {
+    "id": "finance",
+    "name": "财务材料",
+    "subtitle": "交易、资金与会计记录",
+    "description": "用同一批交易生成关联单据，补全日常流水，并检查金额与余额。",
+    "documents": [
+      "发票",
+      "银行回单",
+      "银行流水",
+      "会计凭证"
+    ],
+    "outputs": "PDF · PNG · SVG · Excel · CSV"
+  },
+  {
+    "id": "rights",
+    "name": "权属登记",
+    "subtitle": "知识产权、产权与担保",
+    "description": "分类制作登记证书、登记副本及证明，选择样式并导出整组材料。",
+    "documents": [
+      "专利",
+      "商标",
+      "软件著作权",
+      "不动产",
+      "担保登记",
+      "机动车抵押"
+    ],
+    "outputs": "PDF · PNG · SVG · 素材包"
+  },
+  {
+    "id": "contracts",
+    "name": "合同制作",
+    "subtitle": "从交易模板到案件合同",
+    "description": "保存合同模板，按案件填写字段、调整条款，核对修改并导出 Word。",
+    "documents": [
+      "资产收购",
+      "客户承接",
+      "保密协议"
+    ],
+    "outputs": "Word · 案件方案 · 修改记录"
+  }
+]

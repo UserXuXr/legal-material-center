@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="从统一入口打开企业证照、财务材料和权属登记工作台。">
+  <title>测试案例素材中心</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="素材中心首页"><span class="brand-mark">集</span><span>测试案例<span class="brand-divider">/</span>素材中心</span></a><span class="local-badge"><i></i>本机工作空间</span></header>
+  <main>
+    <section class="intro"><div><p class="eyebrow">MATERIAL WORKSPACE</p><h1>从这里，开始制作。</h1><p class="intro-note">选择材料类型，进入对应工作台。填写、预览，再导出你的案例素材。</p></div><div class="overview"><b id="module-count">—</b><span>个工作台</span><small id="running-count" role="status">正在检查运行状态</small></div></section>
+    <section id="launch-panel" class="launch-panel" hidden aria-live="polite"><span class="spinner" id="launch-spinner" aria-hidden="true"></span><div><h2 id="launch-title">正在打开工作台</h2><p id="launch-note">正在连接本机服务…</p></div><button id="retry" type="button" hidden>重试</button><a href="/">返回全部工作台</a></section>
+    <section aria-labelledby="workbenches-title" id="workbenches-section"><div class="section-head"><h2 id="workbenches-title">全部工作台</h2><button id="refresh" type="button"><span aria-hidden="true">↻</span>刷新状态</button></div><p id="connection-error" class="connection-error" role="alert" hidden></p><div id="workbenches" class="workbenches" aria-live="polite"><p class="loading">正在载入工作台…</p></div></section>
+    <section class="usage" aria-label="使用说明"><div><span class="step">01</span><h3>进入工作台</h3><p>在新标签页打开，未运行的服务会自动启动。</p></div><div><span class="step">02</span><h3>接着原来的方案做</h3><p>各工作台沿用自己的草稿和保存位置。</p></div><div><span class="step">03</span><h3>完成后回到这里</h3><p>工作台顶部的“素材中心”可随时返回总入口。</p></div></section>
+  </main>
+  <footer><span>测试案例 · 素材制作工具集</span><span>保持启动窗口开启，即可持续使用</span></footer>
+  <template id="card-template"><article class="workbench-card"><div class="card-head"><span class="module-icon" aria-hidden="true"></span><span class="state"><i></i><span></span></span></div><p class="card-subtitle"></p><h3></h3><p class="card-description"></p><ul class="document-tags" aria-label="支持的材料"></ul><div class="card-bottom"><p class="output-formats"></p><a class="enter" target="_blank" rel="noopener">进入工作台<span aria-hidden="true">↗</span></a></div><p class="service-detail"></p></article></template>
+  <noscript><p class="connection-error">请开启浏览器 JavaScript，以检查并启动工作台。</p></noscript>
+</body>
+</html>
