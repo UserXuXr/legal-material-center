@@ -157,7 +157,7 @@ assert.deepEqual(draftImport.draft, d);
 const backupImport = await readImport(
   new File([JSON.stringify({ kind: "contract-backup", state })], "backup.json"),
 );
-assert.equal(backupImport.state.drafts.length, 3);
+assert.equal(backupImport.state.drafts.length, templates.length);
 const partial = clone(fixture[2]);
 partial.clauses[0].body += "\n{{正在输入";
 assert.equal(cleanDraft(partial).clauses[0].body, partial.clauses[0].body);
@@ -176,5 +176,5 @@ await writeFile(
   JSON.stringify({ kind: "contract-backup", state }, null, 2),
 );
 console.log(
-  "合同验证通过：3份Word、版本隔离、修改记录、字段解析、缺项拦截、存储恢复、导入校验及XML转义。",
+  "合同验证通过：12份Word、版本隔离、修改记录、字段解析、缺项拦截、存储恢复、导入校验及XML转义。",
 );

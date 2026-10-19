@@ -1,3 +1,4 @@
+import {renderExtension} from './extensions';
 import {vehicleRegister} from './vehicle';
 import {registrationProof} from './registration-proof';
 import {propertyCertificate} from './property';
@@ -47,6 +48,7 @@ function certificate(r:RecordItem):string[]{const f=r.fields;
 }
 export function renderDocument(r:RecordItem,view:View):DocumentPage[]{
  const errors=validateRecord(r,[view]);if(errors.length)throw Error(errors.join('；'));let svgs:string[]=[];let title=getKind(r.kind).views.find(x=>x.id===view)?.name;if(!title)throw Error('该材料类型不支持此文书');const f=r.fields;
+ const extended=renderExtension(r,view);if(extended)return extended;
  if(view==='certificate')svgs=certificate(r);
  if(view==='register')svgs=patentRegister(r);
  if(view==='renewal')svgs=trademarkRenewal(r);

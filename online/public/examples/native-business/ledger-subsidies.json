@@ -1,0 +1,61 @@
+{
+  "schema_version": "business-document/1",
+  "id": "demo-ledger-subsidies",
+  "kind": "ledger",
+  "title": "政府补助台账",
+  "fields": {
+    "issuer": "辰澜云智科技（上海）有限公司",
+    "period": "截至2026年9月30日",
+    "date": "2026-09-30",
+    "basis": "按已收业务单据逐笔登记，金额以元展示；空白表示本表未载。"
+  },
+  "blocks": [],
+  "columns": [
+    {
+      "key": "project",
+      "label": "项目",
+      "type": "text",
+      "width": 36
+    },
+    {
+      "key": "document",
+      "label": "立项文件",
+      "type": "text",
+      "width": 22
+    },
+    {
+      "key": "approved",
+      "label": "核定金额（元）",
+      "type": "money",
+      "width": 20
+    },
+    {
+      "key": "received",
+      "label": "已登记到账（元）",
+      "type": "money",
+      "width": 20
+    },
+    {
+      "key": "deadline",
+      "label": "项目验收期限",
+      "type": "date",
+      "width": 16
+    },
+    {
+      "key": "condition",
+      "label": "条件及进度",
+      "type": "text",
+      "width": 45
+    }
+  ],
+  "rows": [
+    {
+      "project": "工业软件研发专项",
+      "document": "SYN-TECH-2025-08",
+      "approved": 100000000,
+      "received": 60000000,
+      "deadline": "2026-12-31",
+      "condition": "尾款与项目验收挂钩；进度报告准备中"
+    }
+  ]
+}

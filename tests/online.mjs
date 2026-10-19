@@ -11,7 +11,7 @@ const metrics=JSON.parse(fs.readFileSync('online/certificates/font-metrics.json'
 const font=fs.readFileSync('online/public/fonts/NotoSansSC-Regular.ttf').toString('base64');
 const background=id=>'data:image/png;base64,'+fs.readFileSync('online/public/certificate-assets/'+id+'.png').toString('base64');
 fs.mkdirSync('work/qa',{recursive:true});
-const sharp=(await import('/Users/carl_shun/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp/dist/index.mjs')).default;
+const sharp=(await import('sharp')).default;
 // Use the same pure SVG page with a non-browser rasterizer to exercise the complete export chain.
 const rasterize=async page=>'data:image/png;base64,'+(await sharp(Buffer.from(page.svg)).resize(Math.round(page.width*200/72)).png().toBuffer()).toString('base64');
 const savedFetch=globalThis.fetch;globalThis.fetch=()=>{throw Error('Generation must not need a service or font fetch')};

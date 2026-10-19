@@ -1,0 +1,258 @@
+:root {
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #283629;
+  background: #f4f6f0;
+  font-size: 14px;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  border: 1px solid #cfd6c9;
+  border-radius: 7px;
+  background: #fff;
+  color: #38503d;
+  padding: 9px 12px;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+button:hover {
+  border-color: #6f856b;
+}
+.primary {
+  background: #405f43;
+  color: #fff;
+}
+header {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 22px 30px;
+  gap: 28px;
+  border-bottom: 1px solid #dce2d5;
+}
+header a {
+  color: #4e6949;
+  text-decoration: none;
+}
+h1 {
+  font-size: 24px;
+  margin: 0 0 5px;
+}
+header p {
+  margin: 0;
+  color: #75816f;
+}
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+header .buttons {
+  margin-left: auto;
+}
+.studio {
+  display: grid;
+  grid-template-columns: 220px minmax(360px, 1fr) minmax(360px, 1.1fr);
+  min-height: calc(100vh - 100px);
+}
+aside {
+  padding: 24px 16px;
+  background: #edf1e8;
+  border-right: 1px solid #dce2d5;
+}
+aside button {
+  display: block;
+  text-align: left;
+  width: 100%;
+  margin: 5px 0;
+  background: transparent;
+  border-color: transparent;
+}
+aside button.selected {
+  background: #fff;
+  border-color: #839477;
+}
+h2 {
+  font-size: 18px;
+  margin: 0 0 20px;
+}
+h3 {
+  font-size: 14px;
+  color: #687c5e;
+  margin: 26px 0 10px;
+}
+main {
+  padding: 28px;
+  overflow: auto;
+  max-height: calc(100vh - 100px);
+}
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+input,
+textarea,
+select {
+  display: block;
+  width: 100%;
+  border: 1px solid #ccd4c5;
+  border-radius: 5px;
+  background: #fff;
+  padding: 9px;
+  margin-top: 7px;
+  color: #1f3022;
+}
+textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+.block {
+  background: #fff;
+  padding: 14px;
+  border: 1px solid #d9e0d2;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+.preview {
+  padding: 28px;
+  overflow: auto;
+  max-height: calc(100vh - 100px);
+  background: #e8ede3;
+}
+.preview-heading {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  color: #6c7f61;
+  font-size: 12px;
+}
+.paper {
+  padding: 35px;
+  background: #fff;
+  box-shadow: 0 4px 18px #102b1010;
+  color: #161c16;
+  min-height: 700px;
+}
+.paper h1 {
+  font-size: 23px;
+  text-align: center;
+  line-height: 1.6;
+  margin: 12px 0 30px;
+}
+.paper h2 {
+  font-size: 16px;
+  margin: 25px 0 10px;
+}
+.paper p {
+  white-space: pre-wrap;
+  line-height: 1.85;
+  margin: 10px 0;
+}
+.paper .synthetic {
+  color: #8a9386;
+  font-size: 11px;
+  text-align: right;
+}
+.grid-wrap {
+  overflow: auto;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  margin: 10px 0;
+}
+th,
+td {
+  border: 1px solid #c9d2c1;
+  padding: 7px;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+th {
+  background: #edf1e8;
+  font-weight: 500;
+}
+td input,
+th input,
+td textarea {
+  min-width: 90px;
+  min-height: 36px;
+  font-size: 12px;
+  margin: 0;
+}
+.paper td,
+.paper th {
+  font-size: 12px;
+  line-height: 1.6;
+}
+details {
+  margin-top: 30px;
+}
+.notice {
+  padding: 12px 30px;
+  background: #fff5db;
+  border-bottom: 1px solid #dccba4;
+}
+.hint {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #718066;
+}
+.error {
+  color: #a33f30;
+}
+.export {
+  position: sticky;
+  bottom: 0;
+  padding: 18px;
+  background: #e8ede3;
+}
+@media (max-width: 1100px) {
+  .studio {
+    grid-template-columns: 190px 1fr;
+  }
+  .preview {
+    grid-column: 2;
+    max-height: none;
+  }
+  main {
+    max-height: none;
+  }
+}
+@media (max-width: 700px) {
+  header {
+    flex-wrap: wrap;
+  }
+  .studio {
+    display: block;
+  }
+  aside {
+    max-height: 240px;
+    overflow: auto;
+  }
+  .preview,
+  main {
+    padding: 18px;
+  }
+  header .buttons {
+    margin-left: 0;
+  }
+}
+
+input[hidden] { display: none; }
+.grid-wrap table { min-width: 620px; }

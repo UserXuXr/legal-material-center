@@ -1,0 +1,61 @@
+{
+  "schema_version": "business-document/1",
+  "id": "demo-ledger-personnel",
+  "kind": "ledger",
+  "title": "人员资质台账",
+  "fields": {
+    "issuer": "辰澜云智科技（上海）有限公司",
+    "period": "截至2026年9月30日",
+    "date": "2026-09-30",
+    "basis": "按已收业务单据逐笔登记，金额以元展示；空白表示本表未载。"
+  },
+  "blocks": [],
+  "columns": [
+    {
+      "key": "name",
+      "label": "姓名",
+      "type": "text",
+      "width": 22
+    },
+    {
+      "key": "role",
+      "label": "岗位",
+      "type": "text",
+      "width": 22
+    },
+    {
+      "key": "qualification",
+      "label": "资格或证书",
+      "type": "text",
+      "width": 36
+    },
+    {
+      "key": "number",
+      "label": "编号",
+      "type": "text",
+      "width": 22
+    },
+    {
+      "key": "expires",
+      "label": "有效期至",
+      "type": "date",
+      "width": 16
+    },
+    {
+      "key": "record",
+      "label": "资料情况",
+      "type": "text",
+      "width": 45
+    }
+  ],
+  "rows": [
+    {
+      "name": "周予安",
+      "role": "交付负责人",
+      "qualification": "项目管理相关培训证明",
+      "number": "SYN-TRAIN-101",
+      "expires": "2027-06-30",
+      "record": "已收复印件；发证机构核验记录未载"
+    }
+  ]
+}

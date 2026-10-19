@@ -1,0 +1,61 @@
+{
+  "schema_version": "business-document/1",
+  "id": "demo-ledger-leases",
+  "kind": "ledger",
+  "title": "办公场所租赁台账",
+  "fields": {
+    "issuer": "辰澜云智科技（上海）有限公司",
+    "period": "截至2026年9月30日",
+    "date": "2026-09-30",
+    "basis": "按已收业务单据逐笔登记，金额以元展示；空白表示本表未载。"
+  },
+  "blocks": [],
+  "columns": [
+    {
+      "key": "premises",
+      "label": "场所",
+      "type": "text",
+      "width": 35
+    },
+    {
+      "key": "lessor",
+      "label": "出租方",
+      "type": "text",
+      "width": 35
+    },
+    {
+      "key": "from",
+      "label": "租期开始",
+      "type": "date",
+      "width": 16
+    },
+    {
+      "key": "until",
+      "label": "租期结束",
+      "type": "date",
+      "width": 16
+    },
+    {
+      "key": "monthly",
+      "label": "月租金（元）",
+      "type": "money",
+      "width": 20
+    },
+    {
+      "key": "record",
+      "label": "文件情况",
+      "type": "text",
+      "width": 45
+    }
+  ],
+  "rows": [
+    {
+      "premises": "上海市浦东新区云杉路168号8层（虚构）",
+      "lessor": "栖川园区运营有限公司",
+      "from": "2025-01-01",
+      "until": "2027-12-31",
+      "monthly": 5600000,
+      "record": "合同已收，产权及转租授权待补"
+    }
+  ]
+}

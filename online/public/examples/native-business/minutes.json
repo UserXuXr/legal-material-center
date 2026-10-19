@@ -1,0 +1,39 @@
+{
+  "schema_version": "business-document/1",
+  "id": "demo-minutes",
+  "kind": "minutes",
+  "title": "运维平台升级协调会议纪要",
+  "fields": {
+    "date": "2026-09-25",
+    "place": "视频会议",
+    "attendees": "客户项目经理林聿；供应商项目经理沈南；运维主管周予安",
+    "recorder": "林聿",
+    "confirmation": "记录已发送受访人，尚未收到书面确认"
+  },
+  "blocks": [
+    {
+      "type": "heading",
+      "text": "讨论事项"
+    },
+    {
+      "type": "paragraph",
+      "text": "项目组讨论了试用安排、历史附件链接和接口3联调。供应商建议按已完成部分先出具阶段记录；客户希望保留最终验收条件。"
+    },
+    {
+      "type": "heading",
+      "text": "形成的安排"
+    },
+    {
+      "type": "paragraph",
+      "text": "9月27日前由供应商重新提供抽样结果；客户于9月29日前反馈生产窗口。各方可先核对阶段验收表，正式签章另行安排。"
+    },
+    {
+      "type": "heading",
+      "text": "未决事项"
+    },
+    {
+      "type": "paragraph",
+      "text": "接口3是否调整为独立里程碑、首年维护期何日起算，以及异常工单补录的责任尚未一致。参会发言不替代有权限人员正式批准。"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": "business-document/1",
+  "id": "demo-ledger-ip",
+  "kind": "ledger",
+  "title": "知识产权台账",
+  "fields": {
+    "issuer": "辰澜云智科技（上海）有限公司",
+    "period": "截至2026年9月30日",
+    "date": "2026-09-30",
+    "basis": "按已收业务单据逐笔登记，金额以元展示；空白表示本表未载。"
+  },
+  "blocks": [],
+  "columns": [
+    {
+      "key": "name",
+      "label": "权利名称",
+      "type": "text",
+      "width": 36
+    },
+    {
+      "key": "number",
+      "label": "登记或专利号",
+      "type": "text",
+      "width": 26
+    },
+    {
+      "key": "originalOwner",
+      "label": "原证权利人",
+      "type": "text",
+      "width": 35
+    },
+    {
+      "key": "currentRecord",
+      "label": "后续记载",
+      "type": "text",
+      "width": 45
+    },
+    {
+      "key": "security",
+      "label": "负担资料",
+      "type": "text",
+      "width": 45
+    }
+  ],
+  "rows": [
+    {
+      "name": "辰澜运维平台V3.2",
+      "number": "SYN-SW-2024-001",
+      "originalOwner": "辰澜信息技术（上海）有限公司",
+      "currentRecord": "软件名称变更补充证明，2026-03-18",
+      "security": "未载明"
+    },
+    {
+      "name": "一种设备异常识别方法",
+      "number": "SYN-PT-2022-001",
+      "originalOwner": "辰澜信息技术（上海）有限公司",
+      "currentRecord": "名称变更手续合格通知，2026-02-18",
+      "security": "2024年质押；2026年9月有注销申请稿，无登记结果"
+    }
+  ]
+}

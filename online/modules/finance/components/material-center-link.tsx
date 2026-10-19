@@ -1,1 +1,1 @@
-export function MaterialCenterLink(){return <a className="material-center-link" href={import.meta.env.BASE_URL} target="_blank" rel="noopener noreferrer">← 素材中心</a>}
+export function MaterialCenterLink(){return <span style={{display:"flex",gap:12,alignItems:"center",flexWrap:"wrap"}}><a className="material-center-link" href={import.meta.env.BASE_URL} target="_blank" rel="noopener noreferrer">← 素材中心</a><a className="material-center-link" href={import.meta.env.BASE_URL+"batch/"}>批量制作</a></span>}

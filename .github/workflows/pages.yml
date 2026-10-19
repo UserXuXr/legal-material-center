@@ -28,7 +28,10 @@ jobs:
         id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
       - run: npm ci
-      - run: npm run test:contracts
+      - name: Install PDF verification tools
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils fonts-noto-cjk
+      - name: Verify workbench generation and recovery
+        run: npm test
       - name: Build for this repository
         run: npm run build
         env:

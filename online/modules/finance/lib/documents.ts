@@ -174,7 +174,7 @@ export function statementPages(p:Project):DocumentPage[]{
   {label:'摘要 / 流水号',en:'Remark / Reference',width:296,value:r=>(r.t.purpose||r.t.title)+'\n'+r.t.paymentRef},
  ];
  const size=portrait?12:14,gap=portrait?16:19,top=portrait?232:224,head=style==='bilingual'||style==='plain'?59:36,bottom=portrait?1230:936;
- const split=(s:string,width:number)=>s.split('\n').flatMap(part=>wrap(part,width,size).length?wrap(part,width,size):['']);
+ const split=(s:string,width:number)=>s.split('\n').flatMap(part=>/^[A-Za-z0-9][A-Za-z0-9_.:/-]{11,}$/.test(part)?[part]:wrap(part,width,size).length?wrap(part,width,size):['']);
  const prepared=rows.map((r,index)=>{const cells=cols.map(c=>c.align==='right'||/日期|时间/.test(c.label)?[c.value(r,index)]:split(c.value(r,index),c.width-16));return {r,index,cells,height:Math.max(portrait?29:36,Math.max(...cells.map(a=>a.length))*gap+12)};});
  const chunks:typeof prepared[]=[];let chunk:typeof prepared=[],used=0;
  for(const row of prepared){if(chunk.length&&used+row.height>bottom-top-head){chunks.push(chunk);chunk=[];used=0;}chunk.push(row);used+=row.height;}if(chunk.length||!chunks.length)chunks.push(chunk);
@@ -207,7 +207,7 @@ export function statementPages(p:Project):DocumentPage[]{
   // Place the sample seal in a reserved header area, away from transaction data.
   b+=`<g transform="translate(${portrait?846:1422} ${portrait?93:62}) scale(.55)">${receiptStamp(0,0,true)}</g>`;
   if(red)b+=line(38,h-44,w-38,h-44,'#962c34',1.5);
-  return finish(b,w,h,`银行流水_${String(page+1).padStart(2,'0')}`,'statement',{templateId:`statement-${style}`,templateVersion:'1.0',statementSummary:{opening,closing,income:pageIncome,expense:pageExpense,first:part[0]?.index===undefined?0:part[0].index+1,last:part.at(-1)?.index===undefined?0:part.at(-1)!.index+1,count:part.length}});
+  return finish(b,w,h,`银行流水_${String(page+1).padStart(2,'0')}`,'statement',{templateId:`statement-${style}`,templateVersion:'1.1',statementSummary:{opening,closing,income:pageIncome,expense:pageExpense,first:part[0]?.index===undefined?0:part[0].index+1,last:part.at(-1)?.index===undefined?0:part.at(-1)!.index+1,count:part.length}});
  });
 }
 const round2=(v:number)=>Math.round(v*100)/100;

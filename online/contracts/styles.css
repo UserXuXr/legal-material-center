@@ -1127,3 +1127,4 @@ h3 {
   padding: 10px;
   overflow-wrap: anywhere;
 }
+.paper table,.structured-table table{width:100%;border-collapse:collapse;margin:12px 0 20px;table-layout:fixed}.paper th,.paper td,.structured-table th,.structured-table td{border:1px solid #c3c8c0;padding:9px;vertical-align:top;overflow-wrap:anywhere}.paper th{background:#edf0e9;font-weight:600}.structured-tables{margin-top:14px;overflow-x:auto}.structured-table input,.structured-table textarea{width:100%;min-width:90px;box-sizing:border-box;font-size:13px}.structured-table textarea{min-height:72px}.structured-table{margin-bottom:18px}

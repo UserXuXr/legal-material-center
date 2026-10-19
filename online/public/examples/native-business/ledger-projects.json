@@ -1,0 +1,68 @@
+{
+  "schema_version": "business-document/1",
+  "id": "demo-ledger-projects",
+  "kind": "ledger",
+  "title": "项目履行台账",
+  "fields": {
+    "issuer": "辰澜云智科技（上海）有限公司",
+    "period": "截至2026年9月30日",
+    "date": "2026-09-30",
+    "basis": "按已收业务单据逐笔登记，金额以元展示；空白表示本表未载。"
+  },
+  "blocks": [],
+  "columns": [
+    {
+      "key": "contract",
+      "label": "合同编号",
+      "type": "text",
+      "width": 22
+    },
+    {
+      "key": "order",
+      "label": "订单编号",
+      "type": "text",
+      "width": 22
+    },
+    {
+      "key": "delivery",
+      "label": "交付文件",
+      "type": "text",
+      "width": 22
+    },
+    {
+      "key": "acceptance",
+      "label": "验收记载",
+      "type": "text",
+      "width": 35
+    },
+    {
+      "key": "payment",
+      "label": "付款记录",
+      "type": "text",
+      "width": 22
+    },
+    {
+      "key": "allocated",
+      "label": "本项目分配金额（元）",
+      "type": "money",
+      "width": 20
+    },
+    {
+      "key": "record",
+      "label": "核对说明",
+      "type": "text",
+      "width": 40
+    }
+  ],
+  "rows": [
+    {
+      "contract": "CL-LZ-2026-081",
+      "order": "CL-PO-0901",
+      "delivery": "CL-DEL-0918",
+      "acceptance": "CL-UAT-0925 有条件通过",
+      "payment": "2026-09-10首付款",
+      "allocated": 19200000,
+      "record": "不因登记首付款而确认最终验收"
+    }
+  ]
+}

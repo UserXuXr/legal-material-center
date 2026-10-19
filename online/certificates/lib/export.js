@@ -1,9 +1,11 @@
+import {rasterWithFont} from '../../shared/raster.js';
 const FONT_URL=new URL('../../public/fonts/NotoSansSC-Regular.ttf',import.meta.url).href;
 const bytes64=bytes=>{let s='';for(let i=0;i<bytes.length;i+=32768)s+=String.fromCharCode(...bytes.subarray(i,i+32768));return btoa(s)};
 export const safeName=s=>s.replace(/[\\/:*?"<>|\u0000-\u001f]/g,'_').slice(0,85)||'证照样本';
 export function download(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),30000);}
 export function saveProject(project){download(new Blob([JSON.stringify(project,null,2)],{type:'application/json;charset=utf-8'}),safeName(project.name)+'_填写方案.json');}
 export async function pngData(page){
+  if(page.template.vector_style)return rasterWithFont(page,{scale:200/72});
   const url=URL.createObjectURL(new Blob([page.svg],{type:'image/svg+xml;charset=utf-8'}));
   try{
     const img=new Image();await new Promise((resolve,reject)=>{
@@ -22,7 +24,11 @@ export async function loadFont(fetcher=fetch){
   })().catch(()=>{fontPromise=null;throw Error('可检索 PDF 字体未能加载，请重试；也可选择图像 PDF、PNG 或 SVG。')});
   return fontPromise;
 }
-export async function pdfFile(page,png,searchable=false,fontLoader=loadFont){
+export async function pdfFile(page,png,searchable=false,fontLoader=loadFont,options={}){
+  if(page.template.vector_style){
+    const {imageAndTextPDF}=await import('../../shared/pdf.js');
+    return imageAndTextPDF([page],[png],{searchable,fontLoader,dimensions:p=>[p.width,p.height],...options});
+  }
   const {createPDF}=await import('../pdf.js');
   return new Blob([createPDF(page.template,page.layout,searchable?page.background:png,searchable?await fontLoader():'',searchable)],{type:'application/pdf'});
 }

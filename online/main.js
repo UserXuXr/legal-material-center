@@ -1,5 +1,5 @@
 import items from './workbenches.json';
-const $=s=>document.querySelector(s);const cards=new Map();const icons={certificates:'证',finance:'财',rights:'权',contracts:'约'};const states={ready:'可使用'};
+const $=s=>document.querySelector(s);const cards=new Map();const icons={business:'文',certificates:'证',finance:'财',rights:'权',contracts:'约',batch:'批'};const states={ready:'可使用'};
 function render(items) {
   $('#module-count').textContent = items.length;
   $('#running-count').textContent = '均可在线使用';
@@ -22,7 +22,7 @@ function render(items) {
     }
     card.querySelector('.state').dataset.state = item.state;
     card.querySelector('.state span').textContent = states[item.state] || '待检查';
-    card.querySelector('.service-detail').textContent = '方案保存在此浏览器，可导出备份';
+    card.querySelector('.service-detail').textContent = item.id==='batch'?'逐份保存作业与文件，刷新后可继续':'方案保存在此浏览器，可导出备份';
     card.querySelector('.service-detail').classList.toggle('error', ['error','occupied'].includes(item.state));
   }
 }

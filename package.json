@@ -1,13 +1,16 @@
 {
   "name": "case-material-center",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "node tools/export-batch-schema.mjs && tsx tools/export-due-diligence-examples.mjs && vite build",
     "dev": "vite --host 127.0.0.1 --port 3016 --strictPort",
-    "test": "node tests/online.mjs && node tests/contracts.mjs",
-    "test:contracts": "node tests/contracts.mjs"
+    "test": "node tests/online.mjs && node tests/contracts.mjs && tsx tests/phase1.mjs && tsx tests/phase2.mjs && npm run test:collector",
+    "test:contracts": "node tests/contracts.mjs",
+    "test:phase1": "tsx tests/phase1.mjs",
+    "test:collector": "python3 -m unittest discover -s tests -p test_collect_workbench.py -v",
+    "test:phase2": "tsx tests/phase2.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",
@@ -43,10 +46,14 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "0.5.26",
+    "@xmldom/xmldom": "^0.9.12",
+    "fake-indexeddb": "^6.2.6",
     "oxfmt": "0.61.0",
     "oxlint": "1.76.0",
     "oxlint-tsgolint": "7.0.2001",
+    "sharp": "^0.35.5",
     "tailwindcss": "4.2.1",
+    "tsx": "^4.23.15",
     "typescript": "5.9.3",
     "vite": "8.0.13",
     "wrangler": "4.92.0"

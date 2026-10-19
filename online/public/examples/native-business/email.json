@@ -1,0 +1,33 @@
+{
+  "schema_version": "business-document/1",
+  "id": "demo-email",
+  "kind": "email",
+  "title": "运维平台交付与验收往来邮件",
+  "fields": {},
+  "blocks": [],
+  "messages": [
+    {
+      "from": "沈南 <shen.nan@example.invalid>",
+      "to": "林聿 <lin.yu@example.invalid>",
+      "date": "2026-09-18T16:30:00+08:00",
+      "subject": "运维平台升级测试包及交付清单",
+      "body": "林经理：测试包3.2.0-rc2已放到双方约定的测试文件区。附件是交付清单和迁移抽样报告。生产回退方案下周补充。接口3仍等待贵司与原厂协调开放，请确认现阶段可先安排其余部分测试。",
+      "cc": "周予安 <zhou.yuan@example.invalid>",
+      "deliveryRecord": "",
+      "attachments": [
+        "阶段交付清单.docx",
+        "迁移抽样报告.xlsx"
+      ]
+    },
+    {
+      "from": "林聿 <lin.yu@example.invalid>",
+      "to": "沈南 <shen.nan@example.invalid>",
+      "date": "2026-09-19T09:10:00+08:00",
+      "subject": "回复 运维平台升级测试包及交付清单",
+      "body": "安装包可以下载。我们会安排测试，最终结果以后续验收记录为准。请先核对附件链接失效的问题。接口3的范围和上线时间还要内部讨论，本邮件先确认收到这些文件。",
+      "cc": "周予安 <zhou.yuan@example.invalid>",
+      "deliveryRecord": "",
+      "attachments": []
+    }
+  ]
+}

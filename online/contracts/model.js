@@ -1,3 +1,4 @@
+import {cleanTable} from '../shared/word.js';
 export const STORAGE_KEY = "material-center-contracts-v1";
 export const clone = (x) => JSON.parse(JSON.stringify(x));
 export const uid = () => globalThis.crypto.randomUUID();
@@ -10,7 +11,7 @@ const str = (x, n, label) => {
 export function fields(t) {
   return [
     ...new Set(
-      [t.title, ...t.clauses.flatMap((c) => [c.title, c.body])].flatMap((s) =>
+      [t.title, ...t.clauses.flatMap((c) => [c.title, c.body, ...(c.tables||[]).flatMap(t=>[...t.headers,...t.rows.flat()])])].flatMap((s) =>
         [...s.matchAll(token)].map((m) => m[1].trim()),
       ),
     ),
@@ -36,6 +37,7 @@ export function cleanTemplate(x, { allowIncomplete = false } = {}) {
       id: str(c.id, 100, "条款编号"),
       title: str(c.title, 200, "条款标题"),
       body: str(c.body, 30000, "条款正文"),
+      ...(c.tables!==undefined?{tables:(()=>{if(!Array.isArray(c.tables)||c.tables.length>10)throw Error('每条正文最多包含10个表格');return c.tables.map(cleanTable);})()}:{}),
     })),
   };
   if (
@@ -47,7 +49,7 @@ export function cleanTemplate(x, { allowIncomplete = false } = {}) {
     throw Error("模板标题、版本或条款编号无效");
   if (JSON.stringify(t).length > 500000) throw Error("单个模板正文超过限制");
   if (fields(t).length > 100) throw Error("模板变量超过100个");
-  for (const text of [t.title, ...t.clauses.flatMap((c) => [c.title, c.body])]) {
+  for (const text of [t.title, ...t.clauses.flatMap((c) => [c.title, c.body, ...(c.tables||[]).flatMap(t=>[...t.headers,...t.rows.flat()])])]) {
     for (const m of text.matchAll(token))
       if (forbidden.has(m[1].trim())) throw Error("变量名称无效");
     if (!allowIncomplete && /[{}]/u.test(text.replace(token, "")))
@@ -110,6 +112,7 @@ export function renderDraft(d) {
       ...c,
       title: renderText(c.title, d.values),
       body: renderText(c.body, d.values),
+      ...(c.tables?{tables:c.tables.map(t=>({...t,headers:t.headers.map(s=>renderText(s,d.values)),rows:t.rows.map(row=>row.map(s=>renderText(s,d.values)))}))}:{}),
     })),
   };
 }
@@ -123,9 +126,10 @@ export function changes(d) {
       const old = b.find((x) => x.id === c.id);
       return {
         id: c.id,
-        kind: !old ? "新增" : old.title !== c.title || old.body !== c.body ? "调整" : "未改",
+        kind: !old ? "新增" : old.title !== c.title || old.body !== c.body || JSON.stringify(old.tables)!==JSON.stringify(c.tables) ? "调整" : "未改",
         before: old ? renderText(old.title + "\n" + old.body, d.values) : "",
         after: renderText(c.title + "\n" + c.body, d.values),
+        ...(old?.tables||c.tables?{beforeTables:old?.tables||[],afterTables:c.tables||[]}:{}),
       };
     }),
     ...b

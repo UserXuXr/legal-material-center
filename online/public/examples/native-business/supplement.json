@@ -1,0 +1,40 @@
+{
+  "schema_version": "business-document/1",
+  "id": "demo-supplement",
+  "kind": "supplement",
+  "title": "接口调整及交付节点补充协议",
+  "fields": {
+    "number": "CL-ADD-0922",
+    "contract": "CL-LZ-2026-081",
+    "customer": "辰澜云智科技（上海）有限公司",
+    "supplier": "砺舟软件技术（杭州）有限公司",
+    "date": "2026-09-22",
+    "status": "双方项目经理已确认文本，正式签章尚未完成"
+  },
+  "blocks": [
+    {
+      "type": "heading",
+      "text": "变更事项"
+    },
+    {
+      "type": "paragraph",
+      "text": "双方拟将接口3的生产联调节点与其余五个接口分开。供应商应先完成可独立测试部分，并提交接口适配说明及待客户提供事项清单。"
+    },
+    {
+      "type": "heading",
+      "text": "价格及原约定"
+    },
+    {
+      "type": "paragraph",
+      "text": "本次变更拟不增加合同总价。最终验收及验收款触发条件仍以双方正式签署的文件为准；本稿不确认任何付款已经发生。"
+    },
+    {
+      "type": "heading",
+      "text": "签署"
+    },
+    {
+      "type": "paragraph",
+      "text": "甲乙双方签章栏留存于最终签署件。现有项目邮件作为沟通记录另行保存。"
+    }
+  ]
+}

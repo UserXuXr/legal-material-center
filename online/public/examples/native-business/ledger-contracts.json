@@ -1,0 +1,61 @@
+{
+  "schema_version": "business-document/1",
+  "id": "demo-ledger-contracts",
+  "kind": "ledger",
+  "title": "合同与收款台账",
+  "fields": {
+    "issuer": "辰澜云智科技（上海）有限公司",
+    "period": "截至2026年9月30日",
+    "date": "2026-09-30",
+    "basis": "按已收业务单据逐笔登记，金额以元展示；空白表示本表未载。"
+  },
+  "blocks": [],
+  "columns": [
+    {
+      "key": "contract",
+      "label": "合同编号",
+      "type": "text",
+      "width": 22
+    },
+    {
+      "key": "counterparty",
+      "label": "相对方",
+      "type": "text",
+      "width": 36
+    },
+    {
+      "key": "amount",
+      "label": "合同含税金额（元）",
+      "type": "money",
+      "width": 20
+    },
+    {
+      "key": "received",
+      "label": "已登记收款（元）",
+      "type": "money",
+      "width": 20
+    },
+    {
+      "key": "pending",
+      "label": "未到节点金额（元）",
+      "type": "money",
+      "width": 20
+    },
+    {
+      "key": "status",
+      "label": "状态",
+      "type": "text",
+      "width": 40
+    }
+  ],
+  "rows": [
+    {
+      "contract": "CL-LZ-2026-081",
+      "counterparty": "砺舟软件技术（杭州）有限公司",
+      "amount": 48000000,
+      "received": 19200000,
+      "pending": 28800000,
+      "status": "阶段有条件通过；最终验收未完成"
+    }
+  ]
+}

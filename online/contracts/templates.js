@@ -2,6 +2,7 @@
 import assetPurchase from "./content/asset-purchase.js";
 import customerTransfer from "./content/customer-transfer.js";
 import nda from "./content/nda.js";
+import {serviceTemplates,serviceExamples} from './content/software-services.js';
 const make = (id, title, category, clauses) => ({
   schema: 1,
   id,
@@ -16,8 +17,10 @@ export const templates = [
   make("asset-purchase", "资产与业务收购协议", "资产收购", assetPurchase),
   make("customer-transfer", "客户合同三方承接协议", "客户承接", customerTransfer),
   make("nda", "并购项目双向保密协议", "保密协议", nda),
+  ...serviceTemplates,
 ];
 export const examples = {
+  ...serviceExamples,
   "asset-purchase": {
     买方名称: "澜准工业服务有限公司",
     卖方名称: "启棱检测设备服务有限公司",

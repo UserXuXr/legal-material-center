@@ -1,5 +1,6 @@
+import {extensionViews,extensionFields,extensionRequired,extensionErrors} from './extensions';
 export type Kind='patent'|'trademark'|'software'|'property'|'security'|'vehicle';
-export type View='certificate'|'register'|'renewal'|'proof'|'query'|'registrationProof'|'electronicProof';
+export type View='certificate'|'register'|'renewal'|'proof'|'query'|'registrationProof'|'electronicProof'|'change'|'grantNotice'|'pledgeRegistration'|'pledgeReleaseRequest'|'pledgeCancellation';
 export type Field={key:string;label:string;section:string;type?:'date'|'textarea'|'select';options?:string[];required?:boolean;hint?:string;max?:number};
 export type RecordItem={preserveMissing?:boolean;id:string;kind:Kind;fields:Record<string,string>;events:{date:string;action:string;number:string;detail:string}[];views:View[];source:string;logo?:string};
 export type Project={schema:1;name:string;records:RecordItem[]};
@@ -22,6 +23,7 @@ export const schema:Record<Kind,Field[]>={
 };
 export const getKind=(kind:Kind)=>kinds.find(x=>x.id===kind)!;
 export function uid(){return typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():`r-${Date.now()}-${Math.random().toString(36).slice(2)}`}
+for(const kind of kinds){kind.views.push(...(extensionViews[kind.id]||[]));if(extensionFields[kind.id])schema[kind.id].push(...extensionFields[kind.id]);}
 const common={owner:'辰澜云智科技（上海）有限公司',address:'上海市浦东新区澄川路188号3幢501室',issueDate:'2024-06-18'};
 const demo:Record<Kind,Record<string,string>>={
  patent:{...common,title:'一种工业设备运行状态的异常识别方法',patentType:'发明',number:'ZL 2022 1 0000123.0（样本）',certificateNo:'SYN-PT-0001',inventors:'林越；苏致远',applicationDate:'2022-05-12',grantDate:'2024-06-18',publicationNo:'CN 000000123 B（样本）',initialApplicants:common.owner,initialInventors:'林越；苏致远',publicationDate:'2022-11-18',mainClassification:'G06F 11/30',currentAddress:common.address,currentPostcode:'200000',ownerCountry:'中国',currentOwner:common.owner,status:'专利权有效',queryDate:'2026-09-05',queryNo:'SYN-PT-REG-001',notes:'年费缴纳记录：2026年度年费已记载。'},
@@ -31,11 +33,11 @@ const demo:Record<Kind,Record<string,string>>={
  security:{title:'机加工生产线设备抵押',number:'SYN-SR-20240318-001',registrationType:'初始登记',originalNo:'',businessType:'生产设备抵押',issueDate:'2024-03-18',originalDate:'2024-03-18',validTo:'2029-03-17',owner:'澄岳精密制造有限公司',debtorId:'SYN-COMPANY-CY-001',address:'棠河产业园澄工路166号',creditor:'浔川商业银行股份有限公司',creditorId:'SYN-BANK-XC-001',registrant:'浔川商业银行股份有限公司',contractNo:'XC-2024-031',amount:'18000000.00',assetDescription:'澄岳精密制造有限公司位于棠河产业园A栋一层的三台机加工设备，按下列永久序列号识别。\n担保范围依主合同及抵押合同所列约定。',assets:'卧式加工中心 | MC-A501 | SN-CY-A501-001 | A栋一层\n立式加工中心 | MC-V202 | SN-CY-V202-002 | A栋一层\n数控车床 | TC-N404 | SN-CY-N404-003 | A栋一层',changeDetail:'',queryDate:'2026-09-05',queryNo:'SYN-SR-QUERY-001',queryScope:'按担保人“澄岳精密制造有限公司”、标识SYN-COMPANY-CY-001查询。',queryResult:'本次查询返回登记编号SYN-SR-20240318-001。登记类型：初始登记；登记期限届满日：2029年03月17日。'},
  vehicle:{title:'澄岳公司车辆抵押记录',number:'SYN-MV-CERT-000001',startLine:'1',notes:''}
 };
-export function newRecord(kind:Kind):RecordItem{return{id:uid(),kind,fields:{...demo[kind]},events:kind==='patent'?[{date:'2024-06-18',action:'授权',number:demo.patent.publicationNo,detail:'发明专利权授予公告。'},{date:'2026-05-08',action:'年费',number:'SYN-FEE-2026-001',detail:'2026年度年费缴纳记载。'}]:kind==='vehicle'?[{date:'2022-06-18',action:'抵押登记',number:'统一社会信用代码／SYN-LENDER-001',detail:'浔川汽车金融有限公司'},{date:'2024-06-20',action:'解除抵押',number:'',detail:''},{date:'2024-07-01',action:'抵押登记',number:'统一社会信用代码／SYN-BANK-002',detail:'浔川商业银行股份有限公司'}]:[],views:getKind(kind).views.map(x=>x.id),source:'独立合成示例；采用题目背景中的虚构主体，编号、日期和权利内容为演示设定，未经原题事实核对。'};}
+export function newRecord(kind:Kind):RecordItem{return{id:uid(),kind,fields:{...demo[kind]},events:kind==='patent'?[{date:'2024-06-18',action:'授权',number:demo.patent.publicationNo,detail:'发明专利权授予公告。'},{date:'2026-05-08',action:'年费',number:'SYN-FEE-2026-001',detail:'2026年度年费缴纳记载。'}]:kind==='vehicle'?[{date:'2022-06-18',action:'抵押登记',number:'统一社会信用代码／SYN-LENDER-001',detail:'浔川汽车金融有限公司'},{date:'2024-06-20',action:'解除抵押',number:'',detail:''},{date:'2024-07-01',action:'抵押登记',number:'统一社会信用代码／SYN-BANK-002',detail:'浔川商业银行股份有限公司'}]:[],views:getKind(kind).views.filter(x=>!extensionViews[kind]?.some((e:any)=>e.id===x.id)).map(x=>x.id),source:'独立合成示例；采用题目背景中的虚构主体，编号、日期和权利内容为演示设定，未经原题事实核对。'};}
 export function initialProject():Project{return{schema:1,name:'权属登记素材 · 演示批次',records:kinds.map(k=>newRecord(k.id))}}
 export const validDate=(s:string)=>/^\d{4}-\d{2}-\d{2}$/.test(s)&&!Number.isNaN(Date.parse(s))&&new Date(s).toISOString().slice(0,10)===s;
 export function validateRecord(r:RecordItem,views:View[]=r.views):string[]{
- const errors:string[]=[];const v=r.fields;const needed=new Set<string>();
+ const errors:string[]=[];const v=r.fields;const needed=new Set<string>();for(const view of views)extensionRequired(r.kind,view).forEach(k=>needed.add(k));
  if(views.includes('certificate'))schema[r.kind].filter(f=>f.required).forEach(f=>needed.add(f.key));
  if(views.includes('register'))['title','number','currentOwner','queryDate','queryNo','status'].forEach(k=>needed.add(k));
  if(views.includes('renewal'))['title','number','renewalOwner','renewalNo','renewalDate','renewalFrom','renewalTo'].forEach(k=>needed.add(k));
@@ -53,7 +55,7 @@ export function validateRecord(r:RecordItem,views:View[]=r.views):string[]{
  if(r.kind==='security'&&views.includes('certificate')){if(v.issueDate<'2021-01-01')errors.push('当前动产担保模板仅覆盖2021年起的登记结构');before('originalDate','issueDate','本次登记不能早于初始登记');before('originalDate','validTo','登记期限不能早于初始登记');if(v.registrationType!=='初始登记'&&!v.originalNo?.trim())errors.push('请填写关联的初始登记证明编号');if(v.registrationType!=='初始登记'&&!v.changeDetail?.trim())errors.push('请填写本次变更、展期、注销或异议的具体记载');if(v.registrationType==='初始登记'&&v.issueDate!==v.originalDate)errors.push('初始登记的本次日期与初始日期应相同');}
  if(v.amount&&!/^\d+(\.\d{1,2})?$/.test(v.amount))errors.push('登记金额应为非负数字，最多两位小数');
  if(views.includes('register')){r.events.forEach((e,i)=>{if(!validDate(e.date)||!e.action.trim()||!e.detail.trim())errors.push(`第${i+1}项登记事项缺少有效日期、类型或内容`);if(e.date>v.queryDate)errors.push(`第${i+1}项登记事项晚于登记簿出具日期`);});}
- return [...new Set(errors)];
+ errors.push(...extensionErrors(r,views));return [...new Set(errors)];
 }
 export function warnings(r:RecordItem):string[]{const v=r.fields;const out:string[]=[];if(v.queryDate&&v.issueDate&&v.queryDate<v.issueDate)out.push('查询时间早于证书／本次登记日期，请确认是在制作历史记录。');if(v.queryDate&&v.validTo&&v.queryDate>v.validTo)out.push('查询时间已超过原载期限；保留历史日期，不自动续期或判定权利状态。');if(r.kind==='security'&&v.registrationType==='注销登记')out.push('注销记载与债务清偿分别保存；工作台不自动生成清偿结论。');return out;}
 export function parseProject(text:string):Project{

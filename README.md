@@ -1,6 +1,8 @@
 # 测试案例素材中心
 
-当前恢复版已包含四个浏览器工作台。安装依赖 `npm ci`，运行 `npm run dev`，访问 `http://127.0.0.1:3016/`；无需相邻目录的旧工作台服务。新增合同制作见 [CONTRACTS.md](CONTRACTS.md)，静态站点构建见 [ONLINE.md](ONLINE.md)。推荐 Node.js 22.13 或更新版本。原历史源码另有恢复备份，此目录为继续开发的工作副本。
+当前版本为 1.2.0。已在第一批统一 Agent 制件、可检索 PDF、多页流水及逐份恢复的基础上，补充尽调合同、订单验收、访谈邮件、业务台账、知识产权变更与质押、科技资质。新增 `/business/`，全类型验收入口为 `/batch/` 的“载入尽调材料示例”。第二批说明见 [PHASE2_HANDOFF.md](PHASE2_HANDOFF.md)。开发入口仍为 `npm run dev`（3016）。实际调用协议、Reference 管线映射与下载回收见 [BATCH_API.md](online/public/BATCH_API.md)。使用 Node.js 24，先运行 `npm ci`，再运行 `npm test` 和 `npm run build`。测试需要 Python 3 和 Poppler（`pdfinfo`、`pdftotext`、`pdftoppm`）；macOS 可通过 Homebrew 安装 `poppler`，Ubuntu CI 已配置依赖。原始交接包单独保留，当前目录为开发工作副本。
+
+当前版本包含五个制件工作台及统一批量入口。安装依赖 `npm ci`，运行 `npm run dev`，访问 `http://127.0.0.1:3016/`；无需相邻目录的旧工作台服务。新增合同制作见 [CONTRACTS.md](CONTRACTS.md)，静态站点构建见 [ONLINE.md](ONLINE.md)。推荐使用 Node.js 24。原历史源码另有恢复备份，此目录为继续开发的工作副本。
 
 部署到 GitHub Pages 请按 [GITHUB_PAGES.md](GITHUB_PAGES.md) 操作；已包含自动构建发布流程，仓库子路径自动适配。
 

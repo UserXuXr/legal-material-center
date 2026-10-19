@@ -1,3 +1,4 @@
+import {queueEditorBatch} from '../shared/adapters.js';
 import React, { useEffect, useRef, useState } from "react";
 import { templates, examples } from "./templates.js";
 import {
@@ -17,6 +18,10 @@ import {
   fromText,
 } from "./model.js";
 import { download, downloadJSON, readImport, exportContract } from "./files.js";
+function StructuredTables({tables=[],onChange}) {
+  const change=(index,value)=>onChange(tables.map((t,i)=>i===index?value:t));
+  return <div className="structured-tables">{tables.map((t,index)=><div key={index} className="structured-table"><table><thead><tr>{t.headers.map((h,col)=><th key={col}><input aria-label={'表'+(index+1)+'列'+(col+1)+'标题'} value={h} onChange={e=>change(index,{...t,headers:t.headers.map((x,i)=>i===col?e.target.value:x)})}/></th>)}</tr></thead><tbody>{t.rows.map((row,r)=><tr key={r}>{row.map((cell,c)=><td key={c}><textarea aria-label={'表'+(index+1)+'行'+(r+1)+'列'+(c+1)} value={cell} onChange={e=>change(index,{...t,rows:t.rows.map((line,i)=>i===r?line.map((x,j)=>j===c?e.target.value:x):line)})}/></td>)}</tr>)}</tbody></table><div className="actions"><button onClick={()=>change(index,{...t,rows:[...t.rows,t.headers.map(()=>'')]})}>新增行</button><button onClick={()=>change(index,{...t,headers:[...t.headers,'新列'],widths:[...t.widths,1],rows:t.rows.map(row=>[...row,''])})}>新增列</button><button onClick={()=>onChange(tables.filter((_,i)=>i!==index))}>移除此表</button></div></div>)}<button onClick={()=>onChange([...tables,{headers:['项目','内容'],rows:[['','']],widths:[1,2]}])}>添加结构化表格</button></div>;
+}
 
 let bootError = "";
 const initial = () => {
@@ -224,6 +229,7 @@ export default function App() {
         </div>
         <div className="top-actions">
           <span className={saveStatus.startsWith("已") ? "saved" : "unsaved"}>{saveStatus}</span>
+          <button disabled={busy} onClick={()=>queueEditorBatch("contracts",draft).catch(e=>setNotice(e.message))}>批量制作当前合同</button>
           <button onClick={backup}>备份工作台</button>
           <button onClick={() => input.current.click()}>导入</button>
         </div>
@@ -438,7 +444,7 @@ export default function App() {
                     <h3>带入案件信息</h3>
                     {examples[draft.template.id] && (
                       <button className="link" onClick={() => setModal("example")}>
-                        使用并购示例
+                        使用示例数据
                       </button>
                     )}
                   </div>
@@ -537,6 +543,7 @@ export default function App() {
                       value={c.body}
                       onChange={(e) => updateClause(c.id, { body: e.target.value })}
                     />
+                    <StructuredTables tables={c.tables} onChange={tables=>updateClause(c.id,{tables})}/>
                   </section>
                 ))}
                 <button
@@ -658,6 +665,7 @@ export default function App() {
                         .map((s, j) => (s.startsWith("{{") ? <mark key={j}>{s}</mark> : s))}
                     </p>
                   ))}
+                  {(c.tables||[]).map((t,j)=><table key={j}><thead><tr>{t.headers.map((h,i)=><th key={i}>{h}</th>)}</tr></thead><tbody>{t.rows.map((row,i)=><tr key={i}>{row.map((cell,k)=><td key={k}>{cell}</td>)}</tr>)}</tbody></table>)}
                 </section>
               ))}
             </div>
@@ -726,10 +734,9 @@ export default function App() {
             )}
             {modal === "example" && (
               <>
-                <h2>载入并购示例</h2>
+                <h2>载入示例数据</h2>
                 <p>
-                  将用虚构的澜准 /
-                  启棱并购案件填写当前模板字段。现有同名字段会被替换，条款内容保留。
+                  将用当前模板对应的虚构业务示例填写字段。现有同名字段会被替换，条款内容保留。
                 </p>
                 <div className="modal-actions">
                   <button onClick={() => setModal(null)}>取消</button>
@@ -738,7 +745,7 @@ export default function App() {
                     onClick={() => {
                       update({
                         values: { ...draft.values, ...examples[draft.template.id] },
-                        name: draft.template.title + " · 澜准并购示例",
+                        name: draft.template.title + " · 业务示例",
                         caseText: Object.entries(examples[draft.template.id])
                           .map(([k, v]) => k + "：" + v)
                           .join("\n"),
@@ -942,6 +949,7 @@ export default function App() {
                           })
                         }
                       />
+                      <StructuredTables tables={c.tables} onChange={tables=>setTemplateEdit({...templateEdit,clauses:templateEdit.clauses.map(x=>x.id===c.id?{...x,tables}:x)})}/>
                     </div>
                   ))}
                 </div>

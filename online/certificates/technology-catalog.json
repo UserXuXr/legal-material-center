@@ -1,0 +1,779 @@
+[
+  {
+    "id": "high-tech-enterprise-generic-1",
+    "title": "高新技术企业证书",
+    "subtitle": "通用合成证明版 · 参考用户样例字段",
+    "paper": "横版 · A4",
+    "kind": "high_tech_enterprise",
+    "medium": "synthetic-structure",
+    "valid_from": "1900-01-01",
+    "valid_through": null,
+    "issuer_scopes": ["SYNTHETIC"],
+    "page_mm": [297, 210],
+    "fields": [
+      {
+        "key": "entity.name",
+        "label": "企业名称",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.number",
+        "label": "证书编号",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issued_on",
+        "label": "发证日期",
+        "type": "date",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.validity",
+        "label": "票面有效期",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issuer",
+        "label": "批准机关",
+        "type": "textarea",
+        "group": "企业及证书信息"
+      }
+    ],
+    "elements": [
+      {
+        "key": "entity.name",
+        "x": 90,
+        "y": 75.0,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.number",
+        "x": 90,
+        "y": 88.6,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.issued_on",
+        "x": 90,
+        "y": 102.2,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": "date_cn"
+      },
+      {
+        "key": "certificate.validity",
+        "x": 90,
+        "y": 115.8,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.issuer",
+        "x": 90,
+        "y": 129.4,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      }
+    ],
+    "revision": "1.0.0",
+    "vector_style": true,
+    "art_heading": "高新技术企业",
+    "art_subtitle": "证书",
+    "scope_note": "参照用户尽调样例的字段与结构，使用独立绘制的通用合成版面；日期区间仅用于通用样本选版，不表示已复刻各年份或机构的官方证书。SPCA与CMMI分别识别；备案不自动代表测评通过。",
+    "reference": "用户提供的A公司尽调资料，历史样例2018至2021年；已核对2026-10-19",
+    "example": {
+      "version": 1,
+      "name": "高新技术企业证书示例",
+      "template_id": "high-tech-enterprise-generic-1",
+      "values": {
+        "entity.name": "辰澜云智科技（上海）有限公司",
+        "certificate.number": "SYN-GR-2024-01429",
+        "certificate.issued_on": "2024-11-28",
+        "certificate.validity": "三年",
+        "certificate.issuer": "科技、财政及税务相关机构（合成样本）"
+      },
+      "capture": "native",
+      "issuer_scope": "SYNTHETIC",
+      "as_of": "2026-09-30"
+    },
+    "template_hash": "cd62a98d8141615ef669180ca5df57ce36cc9cbd7a325d7ec95aa9f74b7803fc"
+  },
+  {
+    "id": "itss-generic-1",
+    "title": "ITSS运行维护符合性证书",
+    "subtitle": "通用合成证明版 · 参考用户样例字段",
+    "paper": "横版 · A4",
+    "kind": "itss",
+    "medium": "synthetic-structure",
+    "valid_from": "1900-01-01",
+    "valid_through": null,
+    "issuer_scopes": ["SYNTHETIC"],
+    "page_mm": [297, 210],
+    "fields": [
+      {
+        "key": "entity.name",
+        "label": "企业名称",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.number",
+        "label": "证书编号",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.level",
+        "label": "成熟度等级",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.standard",
+        "label": "评估依据",
+        "type": "textarea",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issued_on",
+        "label": "核发日期",
+        "type": "date",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.valid_until",
+        "label": "有效期至",
+        "type": "date",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issuer",
+        "label": "发证机构",
+        "type": "text",
+        "group": "企业及证书信息"
+      }
+    ],
+    "elements": [
+      {
+        "key": "entity.name",
+        "x": 90,
+        "y": 75.0,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.number",
+        "x": 90,
+        "y": 88.6,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.level",
+        "x": 90,
+        "y": 102.2,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.standard",
+        "x": 90,
+        "y": 115.8,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.issued_on",
+        "x": 90,
+        "y": 129.4,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": "date_cn"
+      },
+      {
+        "key": "certificate.valid_until",
+        "x": 90,
+        "y": 143.0,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": "date_cn"
+      },
+      {
+        "key": "certificate.issuer",
+        "x": 90,
+        "y": 156.6,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      }
+    ],
+    "revision": "1.0.0",
+    "vector_style": true,
+    "art_heading": "信息技术服务运行维护标准",
+    "art_subtitle": "符合性证书",
+    "scope_note": "参照用户尽调样例的字段与结构，使用独立绘制的通用合成版面；日期区间仅用于通用样本选版，不表示已复刻各年份或机构的官方证书。SPCA与CMMI分别识别；备案不自动代表测评通过。",
+    "reference": "用户提供的A公司尽调资料，历史样例2018至2021年；已核对2026-10-19",
+    "example": {
+      "version": 1,
+      "name": "ITSS运行维护符合性证书示例",
+      "template_id": "itss-generic-1",
+      "values": {
+        "entity.name": "辰澜云智科技（上海）有限公司",
+        "certificate.number": "SYN-ITSS-3-2024-0192",
+        "certificate.level": "三级",
+        "certificate.standard": "本次评估报告载明的运行维护标准及版本",
+        "certificate.issued_on": "2024-01-28",
+        "certificate.valid_until": "2027-01-27",
+        "certificate.issuer": "信息技术服务评估机构（样本）"
+      },
+      "capture": "native",
+      "issuer_scope": "SYNTHETIC",
+      "as_of": "2026-09-30"
+    },
+    "template_hash": "8c20eb651bb36ec32744379edafd6b75ed1e259a78c681a58debe356db9f54d9"
+  },
+  {
+    "id": "spca-generic-1",
+    "title": "软件能力成熟度等级证书",
+    "subtitle": "通用合成证明版 · 参考用户样例字段",
+    "paper": "竖版 · A4",
+    "kind": "spca",
+    "medium": "synthetic-structure",
+    "valid_from": "1900-01-01",
+    "valid_through": null,
+    "issuer_scopes": ["SYNTHETIC"],
+    "page_mm": [210, 297],
+    "fields": [
+      {
+        "key": "entity.name",
+        "label": "企业名称",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "entity.credit_code",
+        "label": "统一社会信用代码",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "entity.address",
+        "label": "注册地址",
+        "type": "textarea",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.number",
+        "label": "证书编号",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.level",
+        "label": "等级及标准",
+        "type": "textarea",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.assessment_date",
+        "label": "现场评估日期",
+        "type": "date",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issued_on",
+        "label": "颁证日期",
+        "type": "date",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.valid_until",
+        "label": "有效期至",
+        "type": "date",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issuer",
+        "label": "评估机构",
+        "type": "text",
+        "group": "企业及证书信息"
+      }
+    ],
+    "elements": [
+      {
+        "key": "entity.name",
+        "x": 82,
+        "y": 69.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "entity.credit_code",
+        "x": 82,
+        "y": 87.5,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "entity.address",
+        "x": 82,
+        "y": 106.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.number",
+        "x": 82,
+        "y": 124.5,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.level",
+        "x": 82,
+        "y": 143.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.assessment_date",
+        "x": 82,
+        "y": 161.5,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": "date_cn"
+      },
+      {
+        "key": "certificate.issued_on",
+        "x": 82,
+        "y": 180.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": "date_cn"
+      },
+      {
+        "key": "certificate.valid_until",
+        "x": 82,
+        "y": 198.5,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": "date_cn"
+      },
+      {
+        "key": "certificate.issuer",
+        "x": 82,
+        "y": 217.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      }
+    ],
+    "revision": "1.0.0",
+    "vector_style": true,
+    "art_heading": "软件能力成熟度等级证书",
+    "art_subtitle": "SPCA体系参考结构",
+    "scope_note": "参照用户尽调样例的字段与结构，使用独立绘制的通用合成版面；日期区间仅用于通用样本选版，不表示已复刻各年份或机构的官方证书。SPCA与CMMI分别识别；备案不自动代表测评通过。",
+    "reference": "用户提供的A公司尽调资料，历史样例2018至2021年；已核对2026-10-19",
+    "example": {
+      "version": 1,
+      "name": "软件能力成熟度等级证书示例",
+      "template_id": "spca-generic-1",
+      "values": {
+        "entity.name": "辰澜云智科技（上海）有限公司",
+        "entity.credit_code": "SYN-ONLINE-0001",
+        "entity.address": "上海市浦东新区云杉路168号（虚构）",
+        "certificate.number": "SYN-SPCA-2024-10370",
+        "certificate.level": "SJ/T 11235 软件能力成熟度模型等级3",
+        "certificate.assessment_date": "2024-04-09",
+        "certificate.issued_on": "2024-05-06",
+        "certificate.valid_until": "2027-05-05",
+        "certificate.issuer": "软件过程能力评估机构（样本）"
+      },
+      "capture": "native",
+      "issuer_scope": "SYNTHETIC",
+      "as_of": "2026-09-30"
+    },
+    "template_hash": "1a76ba15b686a705e3f3b6c4849cae01c035568744f67991f17e59fddf02a2a3"
+  },
+  {
+    "id": "ip-management-generic-1",
+    "title": "知识产权管理体系认证证书",
+    "subtitle": "通用合成证明版 · 参考用户样例字段",
+    "paper": "竖版 · A4",
+    "kind": "ip_management",
+    "medium": "synthetic-structure",
+    "valid_from": "1900-01-01",
+    "valid_through": null,
+    "issuer_scopes": ["SYNTHETIC"],
+    "page_mm": [210, 297],
+    "fields": [
+      {
+        "key": "entity.name",
+        "label": "企业名称",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "entity.credit_code",
+        "label": "统一社会信用代码",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "entity.address",
+        "label": "注册地址",
+        "type": "textarea",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.number",
+        "label": "注册号",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.standard",
+        "label": "认证标准及版本",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.scope",
+        "label": "认证范围",
+        "type": "textarea",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issued_on",
+        "label": "本次发证日期",
+        "type": "date",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.valid_until",
+        "label": "有效期至",
+        "type": "date",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issuer",
+        "label": "认证机构",
+        "type": "text",
+        "group": "企业及证书信息"
+      }
+    ],
+    "elements": [
+      {
+        "key": "entity.name",
+        "x": 82,
+        "y": 69.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "entity.credit_code",
+        "x": 82,
+        "y": 87.5,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "entity.address",
+        "x": 82,
+        "y": 106.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.number",
+        "x": 82,
+        "y": 124.5,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.standard",
+        "x": 82,
+        "y": 143.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.scope",
+        "x": 82,
+        "y": 161.5,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.issued_on",
+        "x": 82,
+        "y": 180.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": "date_cn"
+      },
+      {
+        "key": "certificate.valid_until",
+        "x": 82,
+        "y": 198.5,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": "date_cn"
+      },
+      {
+        "key": "certificate.issuer",
+        "x": 82,
+        "y": 217.0,
+        "w": 102,
+        "h": 17,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      }
+    ],
+    "revision": "1.0.0",
+    "vector_style": true,
+    "art_heading": "知识产权管理体系认证证书",
+    "art_subtitle": "认证范围与有效期分别记载",
+    "scope_note": "参照用户尽调样例的字段与结构，使用独立绘制的通用合成版面；日期区间仅用于通用样本选版，不表示已复刻各年份或机构的官方证书。SPCA与CMMI分别识别；备案不自动代表测评通过。",
+    "reference": "用户提供的A公司尽调资料，历史样例2018至2021年；已核对2026-10-19",
+    "example": {
+      "version": 1,
+      "name": "知识产权管理体系认证证书示例",
+      "template_id": "ip-management-generic-1",
+      "values": {
+        "entity.name": "辰澜云智科技（上海）有限公司",
+        "entity.credit_code": "SYN-ONLINE-0001",
+        "entity.address": "上海市浦东新区云杉路168号（虚构）",
+        "certificate.number": "SYN-IPMS-2024-0096",
+        "certificate.standard": "GB/T 29490-2023",
+        "certificate.scope": "计算机软件开发和信息系统集成所涉及的知识产权管理",
+        "certificate.issued_on": "2024-03-22",
+        "certificate.valid_until": "2027-03-21",
+        "certificate.issuer": "知识产权认证机构（样本）"
+      },
+      "capture": "native",
+      "issuer_scope": "SYNTHETIC",
+      "as_of": "2026-09-30"
+    },
+    "template_hash": "ef10db6f489acbffe534733e1d71d846a86bd8294ba0c87ede26affe35068807"
+  },
+  {
+    "id": "mlps-filing-generic-1",
+    "title": "信息系统安全等级保护备案证明",
+    "subtitle": "通用合成证明版 · 参考用户样例字段",
+    "paper": "横版 · A4",
+    "kind": "mlps_filing",
+    "medium": "synthetic-structure",
+    "valid_from": "1900-01-01",
+    "valid_through": null,
+    "issuer_scopes": ["SYNTHETIC"],
+    "page_mm": [297, 210],
+    "fields": [
+      {
+        "key": "entity.name",
+        "label": "备案单位",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.system",
+        "label": "信息系统名称",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.level",
+        "label": "安全保护等级",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.number",
+        "label": "备案证明编号",
+        "type": "text",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issued_on",
+        "label": "备案日期",
+        "type": "date",
+        "group": "企业及证书信息"
+      },
+      {
+        "key": "certificate.issuer",
+        "label": "备案公安机关",
+        "type": "text",
+        "group": "企业及证书信息"
+      }
+    ],
+    "elements": [
+      {
+        "key": "entity.name",
+        "x": 90,
+        "y": 75.0,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.system",
+        "x": 90,
+        "y": 88.6,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.level",
+        "x": 90,
+        "y": 102.2,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.number",
+        "x": 90,
+        "y": 115.8,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      },
+      {
+        "key": "certificate.issued_on",
+        "x": 90,
+        "y": 129.4,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": "date_cn"
+      },
+      {
+        "key": "certificate.issuer",
+        "x": 90,
+        "y": 143.0,
+        "w": 181,
+        "h": 12,
+        "size": 11,
+        "min_size": 9,
+        "format": null
+      }
+    ],
+    "revision": "1.0.0",
+    "vector_style": true,
+    "art_heading": "信息系统安全等级保护",
+    "art_subtitle": "备案证明",
+    "scope_note": "参照用户尽调样例的字段与结构，使用独立绘制的通用合成版面；日期区间仅用于通用样本选版，不表示已复刻各年份或机构的官方证书。SPCA与CMMI分别识别；备案不自动代表测评通过。",
+    "reference": "用户提供的A公司尽调资料，历史样例2018至2021年；已核对2026-10-19",
+    "example": {
+      "version": 1,
+      "name": "信息系统安全等级保护备案证明示例",
+      "template_id": "mlps-filing-generic-1",
+      "values": {
+        "entity.name": "辰澜云智科技（上海）有限公司",
+        "certificate.system": "辰澜智能运维服务平台",
+        "certificate.level": "第三级",
+        "certificate.number": "SYN-MLPS-2024-0001",
+        "certificate.issued_on": "2024-10-25",
+        "certificate.issuer": "示例市公安机关（样本）"
+      },
+      "capture": "native",
+      "issuer_scope": "SYNTHETIC",
+      "as_of": "2026-09-30"
+    },
+    "template_hash": "89307ec5bda0df7d5241874c9e2cc0f5244140543d6a328719fc936b427f6b7f"
+  }
+]

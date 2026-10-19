@@ -1,3 +1,4 @@
+import {imageAndTextPDF,withTimeout} from '../../../shared/pdf.js';
 import {type Project,type DocKind,voucherStyleOf,voucherStyles,isLedgerVoucher,voucherUnavailable,requestAmountOf,statementStyleOf,statementStyles,receiptStyleOf,receiptStyles,totals,itemAmounts,entries,statement,validate} from './finance';
 import {type DocumentPage,allPages} from './documents';
 export type Appearance='digital'|'scan';
@@ -10,8 +11,16 @@ export async function pngData(page:DocumentPage,mode:Appearance):Promise<string>
  const svg=appearanceSVG(page.svg,mode),url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml;charset=utf-8'}));
  try{const im=new Image();await new Promise<void>((resolve,reject)=>{im.onload=()=>resolve();im.onerror=()=>reject(Error('图像生成失败，请尝试 SVG 导出'));im.src=url;});const canvas=document.createElement('canvas');canvas.width=page.width*2;canvas.height=page.height*2;const ctx=canvas.getContext('2d');if(!ctx)throw Error('浏览器无法创建图像');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(im,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/png');}finally{URL.revokeObjectURL(url);}
 }
-export async function pdfFromImages(pages:DocumentPage[],images:string[]):Promise<Blob>{const {jsPDF}=await import('jspdf');const first=pages[0];const pdf=new jsPDF({orientation:first.width>first.height?'landscape':'portrait',unit:'pt',format:[first.width*.6,first.height*.6],compress:true});pdf.setProperties({title:'财务素材 · 合成测试样本',subject:'图像版 PDF',creator:'财务素材工作台'});pages.forEach((page,i)=>{if(i)pdf.addPage([page.width*.6,page.height*.6],page.width>page.height?'landscape':'portrait');pdf.addImage(images[i],'PNG',0,0,page.width*.6,page.height*.6,undefined,'FAST');});return pdf.output('blob');}
-export async function exportPDF(pages:DocumentPage[],mode:Appearance){const images=[];for(const page of pages)images.push(await pngData(page,mode));return pdfFromImages(pages,images);}
+export async function pdfFromImages(pages:DocumentPage[],images:string[],options={}){return imageAndTextPDF(pages,images,options);}
+export async function exportPDF(pages:DocumentPage[],mode:Appearance,render=pngData,options={}){const images=[];for(const page of pages)images.push(await withTimeout(render(page,mode)));return pdfFromImages(pages,images,options);}
+export function financialGroups(p:Project){
+ const groups=new Map<string,{id:string;name:string;kind:DocKind;pages:DocumentPage[]}>();
+ for(const page of allPages(p)){
+  const id=page.kind==='statement'?'statement':`${page.kind}-${page.transactionId}-${page.stage??page.templateId??'document'}`;
+  let group=groups.get(id);if(!group){group={id,name:page.kind==='statement'?p.name+'_银行流水':page.name,kind:page.kind,pages:[]};groups.set(id,group);}group.pages.push(page);
+ }
+ return [...groups.values()];
+}
 export function csvCell(value:unknown){let s=String(value??'');if(typeof value==='string'&&/^[\s]*[=+@-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
 export function csvRows(rows:unknown[][]){return '\uFEFF'+rows.map(row=>row.map(csvCell).join(',')).join('\r\n');}
 export function dataRows(p:Project,kind:DocKind):unknown[][]{
@@ -31,10 +40,17 @@ export async function workbookBuffer(p:Project):Promise<ArrayBuffer>{
  ws.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,printTitlesRow:'1:1'};ws.headerFooter.oddFooter='合成测试样本 · 不用于真实业务 | 第 &P 页 / 共 &N 页';}
  return await wb.xlsx.writeBuffer() as ArrayBuffer;
 }
-export async function exportBundle(p:Project,mode:Appearance,onProgress:(n:number,label:string)=>void,renderPage=pngData){
- const errors=validate(p);if(errors.length)throw Error(errors[0]);const {default:JSZip}=await import('jszip');const zip=new JSZip();const pages=allPages(p);const folders={invoice:'01_发票',receipt:'02_银行回单',statement:'03_银行流水',voucher:'04_会计凭证'};
- for(let i=0;i<pages.length;i++){const page=pages[i],base=`素材/${folders[page.kind]}/${safeName(page.name)}`,png=await renderPage(page,mode);zip.file(base+'.svg',appearanceSVG(page.svg,mode));zip.file(base+'.png',png.split(',')[1],{base64:true});const pdf=await pdfFromImages([page],[png]);zip.file(base+'.pdf',await pdf.arrayBuffer());onProgress(Math.round((i+1)/pages.length*88),`正在生成 ${i+1} / ${pages.length} 页`);await new Promise(r=>setTimeout(r,0));}
- zip.file('数据/填写方案.json',JSON.stringify(p,null,2));zip.file('数据/财务关联台账.xlsx',await workbookBuffer(p));for(const kind of ['invoice','receipt','statement','voucher'] as DocKind[])zip.file(`数据/${folders[kind]}.csv`,csvRows(dataRows(p,kind)));
- zip.file('数据/素材索引.json',JSON.stringify({schema_version:1,batch:p.name,synthetic:true,appearance:mode,pages:pages.map(({svg,...rest})=>({...rest,path:`素材/${folders[rest.kind]}/${safeName(rest.name)}.pdf`}))},null,2));
- zip.file('使用说明.txt','本批次为合成测试素材。\n日常补全记录仅进入流水，不生成发票、回单或会计凭证；来源在台账和填写方案中保留。\nPDF 为图像版；SVG 为可缩放文字版；PNG 为2倍尺寸图像。\n填写方案.json 可重新导入工作台；Excel 包含类型化日期、数字与金额公式。\n会计凭证按开票确认和收付款分别生成，以本方企业为核算主体。\n采购专票默认可抵扣，采购普票价税计入所填科目。仅为所选模拟口径。\n尚未支付的交易不生成已入账回单或收付款凭证。\n银行模板为虚构模板，不含真实银行电子签章。\n');onProgress(92,'正在打包文件');return zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:4}},meta=>onProgress(Math.round(92+meta.percent*.08),'正在打包文件'));
+export async function exportBundle(p:Project,mode:Appearance,onProgress:(n:number,label:string)=>void,renderPage=pngData,pdfOptions={}){
+ const errors=validate(p);if(errors.length)throw Error(errors[0]);const {default:JSZip}=await import('jszip');const zip=new JSZip();const groups=financialGroups(p);const folders={invoice:'01_发票',receipt:'02_银行回单',statement:'03_银行流水',voucher:'04_会计凭证'};
+ const count=groups.reduce((n,g)=>n+g.pages.length,0);let done=0;const manifest=[];
+ for(const group of groups){
+  const base=`delivery/${folders[group.kind]}/${safeName(group.name)}`,images=[];
+  for(const [i,page] of group.pages.entries()){
+   const png=await withTimeout(renderPage(page,mode));images.push(png);zip.file(`${base}_p${i+1}.svg`,appearanceSVG(page.svg,mode));zip.file(`${base}_p${i+1}.png`,png.split(',')[1],{base64:true});onProgress(Math.round(++done/count*88),`正在生成 ${done} / ${count} 页`);
+  }
+  zip.file(base+'.pdf',await (await pdfFromImages(group.pages,images,pdfOptions)).arrayBuffer());manifest.push({document_id:group.id,path:base+'.pdf',pages:group.pages.length});
+ }
+ zip.file('authoring/填写方案.json',JSON.stringify(p,null,2));zip.file('authoring/财务关联台账.xlsx',await workbookBuffer(p));for(const kind of ['invoice','receipt','statement','voucher'] as DocKind[])zip.file(`authoring/${folders[kind]}.csv`,csvRows(dataRows(p,kind)));
+ zip.file('authoring/素材索引.json',JSON.stringify({schema_version:2,batch:p.name,synthetic:true,appearance:mode,documents:manifest},null,2));
+ zip.file('使用说明.txt','delivery 为业务材料，authoring 为制作记录，不向被测模型发放。\n同一流水全部页合并为一份PDF；PNG和SVG按页保存。\nPDF默认保留原版面并加入SVG文字层，底图内的图片文字不包括在文字层中。\n逐份制作与失败重试请使用批量制作入口。\n');return zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:4}},meta=>onProgress(Math.round(92+meta.percent*.08),'正在打包文件'));
 }
