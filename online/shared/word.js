@@ -96,7 +96,10 @@ export async function wordBytes({
   landscape = false,
   synthetic = true,
   compact = false,
+  fonts = null,
 }) {
+  const ascii = fonts?.ascii || "Arial";
+  const eastAsia = fonts?.eastAsia || "Noto Sans CJK SC";
   const zip = new JSZip(),
     ns = "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
     width = landscape ? 13958 : 9026;
@@ -163,7 +166,13 @@ export async function wordBytes({
     "word/styles.xml",
     '<?xml version="1.0"?><w:styles xmlns:w="' +
       ns +
-      '"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Noto Sans CJK SC"/><w:sz w:val="22"/><w:color w:val="000000"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:spacing w:line="' +
+      '"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="' +
+      xml(ascii) +
+      '" w:hAnsi="' +
+      xml(ascii) +
+      '" w:eastAsia="' +
+      xml(eastAsia) +
+      '"/><w:sz w:val="22"/><w:color w:val="000000"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:spacing w:line="' +
       (compact ? 300 : 340) +
       '" w:lineRule="auto" w:after="' +
       (compact ? 90 : 130) +

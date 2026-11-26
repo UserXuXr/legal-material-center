@@ -5,8 +5,12 @@ export const safeName=s=>s.replace(/[\\/:*?"<>|\u0000-\u001f]/g,'_').slice(0,85)
 export function download(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),30000);}
 export function saveProject(project){download(new Blob([JSON.stringify(project,null,2)],{type:'application/json;charset=utf-8'}),safeName(project.name)+'_填写方案.json');}
 export async function pngData(page){
-  if(page.template.vector_style)return rasterWithFont(page,{scale:200/72});
-  const url=URL.createObjectURL(new Blob([page.svg],{type:'image/svg+xml;charset=utf-8'}));
+  const {activePairing}=await import('../../shared/font-policy.js');
+  const pairing=activePairing();
+  if(page.template.vector_style)return rasterWithFont(page,{scale:200/72,pairing});
+  const {svgWithPairing}=await import('../../shared/raster.js');
+  const svg=pairing?await svgWithPairing(page.svg,pairing):page.svg;
+  const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml;charset=utf-8'}));
   try{
     const img=new Image();await new Promise((resolve,reject)=>{
       const timer=setTimeout(()=>{img.onload=null;img.onerror=null;reject(Error('图片生成超时，请重试或下载 SVG'))},15000);
@@ -25,15 +29,30 @@ export async function loadFont(fetcher=fetch){
   return fontPromise;
 }
 export async function pdfFile(page,png,searchable=false,fontLoader=loadFont,options={}){
+  const {activePairing,loadChineseFont,toBase64,missingGlyphs,isCjk}=await import('../../shared/font-policy.js');
+  const pairing=options.pairing===undefined?activePairing():options.pairing;
   if(page.template.vector_style){
     const {imageAndTextPDF}=await import('../../shared/pdf.js');
-    return imageAndTextPDF([page],[png],{searchable,fontLoader,dimensions:p=>[p.width,p.height],...options});
+    return imageAndTextPDF([page],[png],{searchable,fontLoader,dimensions:p=>[p.width,p.height],...options,pairing});
   }
+  let fontBase64='';
+  if(searchable&&pairing){
+    const bytes=await loadChineseFont(pairing);
+    const text=page.layout.flatMap(field=>field.lines.map(line=>line.text)).join('');
+    const missing=missingGlyphs(bytes,[...text].filter(isCjk).join(''));
+    if(missing.length)throw Error(`所选中文字体缺少这些字，已停止且未生成文件：${[...new Set(missing)].slice(0,24).join(' ')}`);
+    fontBase64=toBase64(bytes);
+  }else if(searchable)fontBase64=await fontLoader();
   const {createPDF}=await import('../pdf.js');
-  return new Blob([createPDF(page.template,page.layout,searchable?page.background:png,searchable?await fontLoader():'',searchable)],{type:'application/pdf'});
+  return new Blob([createPDF(page.template,page.layout,searchable?page.background:png,fontBase64,searchable,pairing)],{type:'application/pdf'});
 }
 export async function exportCertificate(page,format,{rasterize=pngData,fontLoader=loadFont,onProgress=(_label)=>{}}={}){
-  if(format==='svg')return new Blob([page.svg],{type:'image/svg+xml;charset=utf-8'});
+  if(format==='svg'){
+    const {activePairing}=await import('../../shared/font-policy.js');
+    const {svgWithPairing}=await import('../../shared/raster.js');
+    const pairing=activePairing();
+    return new Blob([pairing?await svgWithPairing(page.svg,pairing):page.svg],{type:'image/svg+xml;charset=utf-8'});
+  }
   if(!['png','pdf','zip'].includes(format))throw Error('不支持的导出格式');
   onProgress('正在生成图片');const png=await rasterize(page);
   const bytes=Uint8Array.from(atob(png.split(',')[1]),c=>c.charCodeAt(0));

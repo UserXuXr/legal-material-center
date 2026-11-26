@@ -32,4 +32,4 @@ export function documentBlocks(input){
   const resolve=value=>memoFields?value.replace(/\{\{\s*([^{}\n]+?)\s*\}\}/gu,(token,key)=>memoFields[key.trim()]?.trim()||token):value;
   return [...t.fields.map(f=>({type:'paragraph',text:f.label+'：'+(d.fields[f.key]||'未载明')})),...d.sections.flatMap(s=>[...(s.heading?[{type:'heading',text:resolve(s.heading)}]:[]),{type:'paragraph',text:resolve(s.body)}])];
 }
-export async function documentWord(input){const d=cleanDocument(input);return new Blob([await wordBytes({title:d.title,blocks:documentBlocks(d)})],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});}
+export async function documentWord(input,fonts=null,pairing=null){const d=cleanDocument(input);const blocks=documentBlocks(d);const {assertCovered}=await import('../shared/font-policy.js');await assertCovered([d.title,...blocks.map(block=>block.text||'')].join('\n'),pairing);return new Blob([await wordBytes({title:d.title,blocks,fonts})],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});}

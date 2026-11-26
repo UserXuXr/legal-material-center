@@ -1,6 +1,9 @@
 import {cleanSettings,processPixels,random} from './model.js';
+import {applyPageScan,sealPlacement} from '../shared/seal.js';
+import {renderTexturedSeal} from '../shared/contract-perforation.js';
 const make=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
-export function simulateScan(source,raw,index=0,marks=[]){
+const sealLayer=spec=>renderTexturedSeal(spec);
+export function simulateScan(source,raw,index=0,marks=[],seal=null,signature=null){
   const s=cleanSettings(raw),seed=(s.seed+Math.imul(index+1,2654435761))>>>0,rand=random(seed),w=source.width,h=source.height;
   if(w*h>16000000||w<1||h<1)throw Error('页面过大，请降低分辨率');
   const result=make(w,h),ctx=result.getContext('2d',{willReadFrequently:true});
@@ -46,6 +49,22 @@ export function simulateScan(source,raw,index=0,marks=[]){
     const y=h*.51,cross=ctx.createLinearGradient(0,y-h*.008,0,y+h*.008);cross.addColorStop(0,'transparent');cross.addColorStop(.45,`rgba(65,65,65,${s.fold/700})`);cross.addColorStop(.55,`rgba(255,255,255,${s.fold/250})`);cross.addColorStop(1,'transparent');ctx.fillStyle=cross;ctx.fillRect(0,0,w,h);
   }
   if(s.watermark){ctx.fillStyle=s.mode==='color'?'rgba(60,55,45,.40)':'rgba(55,55,55,.40)';ctx.font=`${Math.max(9,w*.008)}px sans-serif`;ctx.textAlign='right';ctx.fillText('合成扫描',w-w*.02,h-h*.012);}
+  if(seal?.enabled&&typeof document!=='undefined'){
+    const stamp=sealLayer(seal);
+    const box=sealPlacement(w,h,stamp.width,stamp.height,seal,index);
+    ctx.save();ctx.globalAlpha=box.opacity;
+    ctx.drawImage(stamp,box.sx,0,box.sw,stamp.height,box.x,box.y,box.dw,box.dh);
+    ctx.restore();
+  }
+  if(signature?.enabled&&typeof document!=='undefined'){
+    ctx.save();ctx.fillStyle='#202226';ctx.textAlign='left';ctx.textBaseline='alphabetic';
+    ctx.font=`${Math.max(28,w*.045)}px "${signature.font}",sans-serif`;
+    ctx.fillText(signature.name,(signature.x??.68)*w,(signature.y??.84)*h);ctx.restore();
+  }
+  if(seal?.enabled&&seal.texture==='scan'){
+    const image=ctx.getImageData(0,0,w,h);
+    ctx.putImageData(new ImageData(applyPageScan(image.data,w,h),w,h),0,0);
+  }
   return result;
 }
 export const canvasBlob=(canvas,type='image/png',quality=.88)=>new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('扫描图像导出失败')),type,quality));

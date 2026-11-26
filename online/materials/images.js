@@ -53,7 +53,7 @@ export function imageTranscript(input){
   if(d.kind==='attendance')return `系统：${v.system}\n人员：${v.person}\n\n${v.events.map(e=>`${e.date} ${e.time} ${e.action}\n地点：${e.place}\n状态：${e.status}`).join('\n\n')}`;
   return `节点\n${v.nodes.map(n=>n.id+'：'+n.label).join('\n')}\n\n连线\n${v.edges.map(e=>`${e.from} → ${e.to}：${e.label}`).join('\n')}\n\n${v.note}`;
 }
-export async function imageWord(input){const d=cleanImage(input);return new Blob([await wordBytes({title:d.title+' · 内容转录',blocks:[{type:'paragraph',text:imageTranscript(d)}]})],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});}
+export async function imageWord(input,fonts=null,pairing=null){const d=cleanImage(input);const text=imageTranscript(d);const {assertCovered}=await import('../shared/font-policy.js');await assertCovered(d.title+text,pairing);return new Blob([await wordBytes({title:d.title+' · 内容转录',blocks:[{type:'paragraph',text}],fonts})],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});}
 export function imagePages(input){
   const d=cleanImage(input),v=d.data,parts=[];
   if(d.kind==='chat'){

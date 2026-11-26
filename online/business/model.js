@@ -396,21 +396,26 @@ export function businessBlocks(input) {
     });
   return out;
 }
-export async function businessFile(input, format) {
+export async function businessFile(input, format, fonts = null, pairing = null) {
   const d = cleanBusiness(input);
   if (!formatsFor(d).includes(format)) throw Error("本类业务文书不支持" + format);
-  if (format === "docx")
+  if (format === "docx") {
+    const blocks = businessBlocks(d);
+    const {assertCovered} = await import("../shared/font-policy.js");
+    await assertCovered([d.title, ...blocks.map(block => block.text || (block.headers || []).concat(...(block.rows || [])).join("\n"))].join("\n"), pairing);
     return new Blob(
       [
         await wordBytes({
           title: d.title,
-          blocks: businessBlocks(d),
+          blocks,
           compact: d.kind === "interview",
           landscape: d.kind === "ledger" && d.columns.length > 6,
+          fonts,
         }),
       ],
       { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
     );
+  }
   if (format === "csv") {
     const escape = (s, guard = true) =>
       '"' +

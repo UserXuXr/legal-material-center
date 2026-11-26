@@ -1,5 +1,17 @@
 [
   {
+    "id": "reference-edit",
+    "name": "材料修订",
+    "subtitle": "字体、骑缝章与模拟签名",
+    "description": "识别矢量PDF里混用的中文字体，统一正文与标题，并放置样本章、骑缝章或姓名模拟签名。扫描件会说明不能直接改字体。",
+    "documents": [
+      "矢量字体统一",
+      "骑缝章",
+      "模拟签名"
+    ],
+    "outputs": "新PDF · 保留目录的新ZIP"
+  },
+  {
     "id": "batch",
     "name": "批量制作",
     "subtitle": "Agent 与人工共用的制件入口",

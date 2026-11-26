@@ -10,6 +10,7 @@ import {MaterialsStore} from './store.js';
 import {IndexedDBStore} from '../shared/batch-store.js';
 import {BatchRunner,digest,validateBatch} from '../shared/batch.js';
 import {assignRevisions,renderMaterial,validateDocument} from '../shared/adapters.js';
+import {PAIRINGS,setExportPairing} from '../shared/font-policy.js';
 const label={documents:'文书',images:'图片',original:'原件'};
 const defaultFormats={documents:['docx','pdf'],images:['png','pdf','docx']};
 function fresh(engine,id){const model=engine==='documents'?exampleDocument(id):exampleImage(id);model.id=crypto.randomUUID();return {engine,model,formats:[...defaultFormats[engine]]};}
@@ -49,7 +50,8 @@ function ImageEditor({model,onChange}){
   return <DiagramFields model={model} onChange={onChange}/>;
 }
 export default function App(){
-  const [draftStore]=useState(()=>new MaterialsStore()),[batchStore]=useState(()=>new IndexedDBStore()),[state,setState]=useState(null),[domain,setDomain]=useState('labor'),[mode,setMode]=useState('documents'),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false),[query,setQuery]=useState(''),[libraryOpen,setLibraryOpen]=useState(false),[view,setView]=useState('edit');
+  const [draftStore]=useState(()=>new MaterialsStore()),[batchStore]=useState(()=>new IndexedDBStore()),[state,setState]=useState(null),[domain,setDomain]=useState('labor'),[mode,setMode]=useState('documents'),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false),[query,setQuery]=useState(''),[libraryOpen,setLibraryOpen]=useState(false),[view,setView]=useState('edit'),[pairing,setPairing]=useState('song-times');
+  useEffect(()=>{setExportPairing(pairing);try{localStorage.setItem('reference-export-pairing',pairing);}catch{}},[pairing]);
   const guard=useRef(false),inputFile=useRef(null),planFile=useRef(null);
   useEffect(()=>{let live=true;draftStore.get().then(saved=>{
     if(!live)return;
@@ -86,7 +88,7 @@ export default function App(){
     setState(s=>({...s,active:items[0].model.id,items:[...items,...s.items.filter(x=>!items.some(i=>i.model.id===x.model.id))]}));setNotice('方案已导入。');
   }
   const template=item?.engine==='documents'?documentTemplates.find(t=>t.id===model.template_id):null;
-  return <><header><a href={import.meta.env.BASE_URL}>← 素材中心</a><div><h1>文档与图片</h1><p>按业务门类选文书，制作图片材料，接收已有原件</p></div><div className="actions"><a href={import.meta.env.BASE_URL+'screenshots/'}>微信截图 ↗</a><a href={import.meta.env.BASE_URL+'scans/'}>扫描件模拟 ↗</a><button disabled={!state||busy} onClick={()=>planFile.current.click()}>导入方案</button><button disabled={!state||busy} onClick={()=>save(new Blob([JSON.stringify(state,null,2)],{type:'application/json;charset=utf-8'}),'文档图片_方案.json')}>导出全部方案</button><button className="primary" disabled={!state||busy} onClick={()=>perform(sendAll)}>全部送入批量制作</button></div></header>
+  return <><header><a href={import.meta.env.BASE_URL}>← 素材中心</a><div><h1>文档与图片</h1><p>按业务门类选文书，制作图片材料，接收已有原件</p></div><div className="actions"><a href={import.meta.env.BASE_URL+'screenshots/'}>微信截图 ↗</a><a href={import.meta.env.BASE_URL+'scans/'}>扫描件模拟 ↗</a><a href={import.meta.env.BASE_URL+'reference-edit/'}>修订PDF ↗</a><button disabled={!state||busy} onClick={()=>planFile.current.click()}>导入方案</button><button disabled={!state||busy} onClick={()=>save(new Blob([JSON.stringify(state,null,2)],{type:'application/json;charset=utf-8'}),'文档图片_方案.json')}>导出全部方案</button><button className="primary" disabled={!state||busy} onClick={()=>perform(sendAll)}>全部送入批量制作</button></div></header>
     <input ref={planFile} hidden type="file" accept=".json" onChange={e=>perform(()=>importPlan(e))}/><input ref={inputFile} hidden type="file" multiple accept=".pdf,.docx,.png,.jpg,.jpeg,.txt,.md" onChange={e=>perform(()=>importOriginal(e))}/>
     {notice&&<div className="notice" role="status">{notice}</div>}
     {!state?<main className="loading"><p>{notice?'草稿未加载，请保留现有浏览器数据后重试。':'正在读取草稿…'}</p></main>:<div className={'studio mobile-'+view}><aside><button className="mobile-library-toggle" aria-expanded={libraryOpen} onClick={()=>setLibraryOpen(v=>!v)}>{libraryOpen?'收起模板选择':'选择文书、图片或导入原件'}</button><div className={libraryOpen?'library open':'library'}>
@@ -102,7 +104,7 @@ export default function App(){
         <label>脱敏核对状态<select value={model.source.redaction} onChange={e=>update({...model,source:{...model.source,redaction:e.target.value}})}><option value="not_checked">尚未核对</option><option value="user_declared">提供者声明已脱敏</option><option value="reviewed">我已另行核对</option></select></label>
         <label>接收与核对备注<textarea value={model.source.notes} onChange={e=>update({...model,source:{...model.source,notes:e.target.value}})}/></label>
       </>}
-      <section className="export-panel"><h2>本份输出</h2><div className="format-options">{(item.engine==='original'?[model.file.format]:item.engine==='documents'?['docx','pdf','png','svg']:['png','pdf','svg','docx']).map(f=><label key={f}><input type="checkbox" checked={item.formats.includes(f)} disabled={item.engine==='original'} onChange={e=>setState(s=>({...s,items:s.items.map(i=>i.model.id===model.id?{...i,formats:e.target.checked?[...i.formats,f]:i.formats.filter(v=>v!==f)}:i)}))}/>{f.toUpperCase()}{item.engine==='images'&&f==='docx'?' 转录':''}</label>)}</div><button className="primary" disabled={!item.formats.length} onClick={()=>perform(produce)}>{busy?'正在保存与制作…':item.engine==='original'?'保存并下载原件':'制作并下载本份'}</button><p className="muted">多个文件打包下载，制作记录可从批量制作入口导出。</p></section></fieldset>
+      <section className="export-panel"><h2>本份输出</h2><label>导出前的中西文配对<select aria-label="中西文配对" value={pairing} onChange={e=>setPairing(e.target.value)}>{PAIRINGS.map(item=><option key={item.id} value={item.id}>{item.label}</option>)}</select></label><p className="muted">同一份里的中文用同一款，西文用同一款。缺字会停止，不会生成缺字文件。扫描件不能靠这里改字体。</p><div className="format-options">{(item.engine==='original'?[model.file.format]:item.engine==='documents'?['docx','pdf','png','svg']:['png','pdf','svg','docx']).map(f=><label key={f}><input type="checkbox" checked={item.formats.includes(f)} disabled={item.engine==='original'} onChange={e=>setState(s=>({...s,items:s.items.map(i=>i.model.id===model.id?{...i,formats:e.target.checked?[...i.formats,f]:i.formats.filter(v=>v!==f)}:i)}))}/>{f.toUpperCase()}{item.engine==='images'&&f==='docx'?' 转录':''}</label>)}</div><button className="primary" disabled={!item.formats.length} onClick={()=>perform(produce)}>{busy?'正在保存与制作…':item.engine==='original'?'保存并下载原件':'制作并下载本份'}</button><p className="muted">多个文件打包下载，制作记录可从批量制作入口导出。</p></section></fieldset>
     </main><section className="preview-panel" aria-label="文件预览"><div className="preview-heading"><h2>{item.engine==='original'?'原件预览':'排版预览'}</h2><span>{item.engine==='original'?'原字节保留':'合成案例材料'}</span></div><Preview item={item}/></section></div>}
   </>;
 }

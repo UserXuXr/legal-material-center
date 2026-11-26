@@ -9,6 +9,7 @@ import {
 } from "./model.js";
 import { exampleBusiness, exampleLedger, ledgerNames } from "./examples.js";
 import { queueEditorBatch } from "../shared/adapters.js";
+import { PAIRINGS, officeFonts, pairingById, setExportPairing } from "../shared/font-policy.js";
 const KEY = "material-center-business-v1",
   clone = (x) => structuredClone(x);
 const fresh = (kind) => {
@@ -97,6 +98,8 @@ function Table({ value, onChange }) {
   );
 }
 export default function App() {
+  const [pairing, setPairing] = useState("song-times");
+  useEffect(() => { setExportPairing(pairing); try { localStorage.setItem("reference-export-pairing", pairing); } catch {} }, [pairing]);
   const [state, setState] = useState(() => {
       try {
         const saved = JSON.parse(localStorage.getItem(KEY));
@@ -607,13 +610,15 @@ export default function App() {
               )
             )}
           </article>
+          <label>导出前中西文配对<select aria-label="中西文配对" value={pairing} onChange={(e) => setPairing(e.target.value)}>{PAIRINGS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
+          <p className="hint">Word 使用这一对中西文字体名。台账的 XLSX 和 CSV 是表格数据，不套用正文字体。缺字不会在 Word 里被悄悄替换成另一款已嵌入字体。</p>
           <div className="buttons export">
             {formatsFor(d).map((format) => (
               <button
                 disabled={busy || !!error}
                 key={format}
                 onClick={perform(async () =>
-                  download(await businessFile(d, format), d.title + "." + format),
+                  download(await businessFile(d, format, officeFonts(pairingById(pairing)), pairingById(pairing)), d.title + "." + format),
                 )}
               >
                 下载 {format.toUpperCase()}

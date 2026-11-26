@@ -1,3 +1,4 @@
+import {splitScripts} from './font-policy.js';
 // A searchable text layer over the exact existing SVG raster preserves the form's layout.
 const FONT_URL = new URL('../public/fonts/NotoSansSC-Regular.ttf', import.meta.url).href;
 let fontPromise;
@@ -68,7 +69,27 @@ export function svgTextRuns(svg, Parser = globalThis.DOMParser) {
   walk(doc.documentElement, identity, {size:16, anchor:'start'});
   return runs;
 }
-export async function imageAndTextPDF(pages, images, {searchable = true, dimensions = p => [p.width * .6, p.height * .6], fontLoader = loadPDFFont, Parser} = {}) {
+function mixedWidth(pdf, text, pairing) {
+  return splitScripts(text).reduce((sum, part) => {
+    pdf.setFont(part.kind === 'cjk' ? pdf.__pairFamily : pairing.latin, 'normal');
+    return sum + pdf.getTextWidth(part.text);
+  }, 0);
+}
+function drawRun(pdf, run, w, h, page, pairing) {
+  pdf.setFontSize(run.size * h / page.height);
+  const fullWidth = mixedWidth(pdf, run.text, pairing);
+  const offset = fullWidth * run.horizontalScale * (run.anchor === 'end' ? 1 : run.anchor === 'middle' ? .5 : 0);
+  const radians = -run.angle * Math.PI / 180;
+  let x = run.x * w / page.width - Math.cos(radians) * offset;
+  const y = run.y * h / page.height - Math.sin(radians) * offset;
+  const parts = pairing ? splitScripts(run.text) : [{kind:'cjk', text:run.text}];
+  for (const part of parts) {
+    if (pairing) pdf.setFont(part.kind === 'cjk' ? pdf.__pairFamily : pairing.latin, 'normal');
+    pdf.text(part.text, x, y, {baseline:'alphabetic', horizontalScale:run.horizontalScale, angle:run.angle, renderingMode:'invisible'});
+    x += pdf.getTextWidth(part.text) * run.horizontalScale;
+  }
+}
+export async function imageAndTextPDF(pages, images, {searchable = true, dimensions = p => [p.width * .6, p.height * .6], fontLoader = loadPDFFont, Parser, pairing = null} = {}) {
   if (!pages.length || pages.length !== images.length) throw Error('PDF页与图片数量不一致');
   const allRuns = searchable ? pages.map(page => {
     const runs = svgTextRuns(page.svg, Parser);
@@ -79,7 +100,18 @@ export async function imageAndTextPDF(pages, images, {searchable = true, dimensi
   const first = dimensions(pages[0]);
   const pdf = new jsPDF({unit:'pt', format:first, orientation:first[0] > first[1] ? 'landscape' : 'portrait', compress:true, putOnlyUsedFonts:true});
   pdf.setProperties({title:'法律业务材料 · 合成测试样本', creator:'法律材料工作台', subject:searchable ? '原始版面与可检索SVG文字层；底图内文字不包含在文字层中' : '图像版PDF'});
-  if (searchable) {
+  if (searchable && pairing) {
+    const {loadChineseFont, missingGlyphs, toBase64, isCjk} = await import('./font-policy.js');
+    const bytes = await loadChineseFont(pairing);
+    const sample = allRuns.flat().map(run => [...run.text].filter(isCjk).join('')).join('');
+    const missing = missingGlyphs(bytes, sample);
+    if (missing.length) throw Error(`所选中文字体缺少这些字，已停止且未生成文件：${missing.slice(0, 24).join(' ')}`);
+    const family = pairing.chinese === 'song' ? 'NotoSerifSC' : pairing.chinese === 'thin' ? 'NotoSansSCThin' : 'NotoSansSCBold';
+    pdf.addFileToVFS(pairing.file, toBase64(bytes));
+    pdf.addFont(pairing.file, family, 'normal');
+    pdf.__pairFamily = family;
+    pdf.setFont(family, 'normal');
+  } else if (searchable) {
     pdf.addFileToVFS('NotoSansSC-Regular.ttf', await fontLoader());
     pdf.addFont('NotoSansSC-Regular.ttf', 'MaterialSC', 'normal');
     pdf.setFont('MaterialSC','normal');
@@ -90,11 +122,14 @@ export async function imageAndTextPDF(pages, images, {searchable = true, dimensi
     if (i) pdf.addPage([w,h], w > h ? 'landscape' : 'portrait');
     pdf.addImage(images[i], 'PNG', 0, 0, w, h, undefined, 'FAST');
     if (searchable) for (const run of allRuns[i]) {
-      pdf.setFontSize(run.size * h / page.height);
-      const offset=pdf.getTextWidth(run.text)*run.horizontalScale*(run.anchor==='end'?1:run.anchor==='middle'?.5:0),radians=-run.angle*Math.PI/180;
-      pdf.text(run.text, run.x * w / page.width-Math.cos(radians)*offset, run.y * h / page.height-Math.sin(radians)*offset, {
-        baseline:'alphabetic',horizontalScale:run.horizontalScale,angle:run.angle,renderingMode:'invisible',
-      });
+      if (!pairing) {
+        pdf.setFont('MaterialSC','normal');
+        pdf.setFontSize(run.size * h / page.height);
+        const offset=pdf.getTextWidth(run.text)*run.horizontalScale*(run.anchor==='end'?1:run.anchor==='middle'?.5:0),radians=-run.angle*Math.PI/180;
+        pdf.text(run.text, run.x * w / page.width-Math.cos(radians)*offset, run.y * h / page.height-Math.sin(radians)*offset, {
+          baseline:'alphabetic',horizontalScale:run.horizontalScale,angle:run.angle,renderingMode:'invisible',
+        });
+      } else drawRun(pdf, run, w, h, page, pairing);
     }
   });
   return pdf.output('blob');

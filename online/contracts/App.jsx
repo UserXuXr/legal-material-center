@@ -18,6 +18,7 @@ import {
   fromText,
 } from "./model.js";
 import { download, downloadJSON, readImport, exportContract } from "./files.js";
+import { PAIRINGS, setExportPairing } from "../shared/font-policy.js";
 function StructuredTables({tables=[],onChange}) {
   const change=(index,value)=>onChange(tables.map((t,i)=>i===index?value:t));
   return <div className="structured-tables">{tables.map((t,index)=><div key={index} className="structured-table"><table><thead><tr>{t.headers.map((h,col)=><th key={col}><input aria-label={'表'+(index+1)+'列'+(col+1)+'标题'} value={h} onChange={e=>change(index,{...t,headers:t.headers.map((x,i)=>i===col?e.target.value:x)})}/></th>)}</tr></thead><tbody>{t.rows.map((row,r)=><tr key={r}>{row.map((cell,c)=><td key={c}><textarea aria-label={'表'+(index+1)+'行'+(r+1)+'列'+(c+1)} value={cell} onChange={e=>change(index,{...t,rows:t.rows.map((line,i)=>i===r?line.map((x,j)=>j===c?e.target.value:x):line)})}/></td>)}</tr>)}</tbody></table><div className="actions"><button onClick={()=>change(index,{...t,rows:[...t.rows,t.headers.map(()=>'')]})}>新增行</button><button onClick={()=>change(index,{...t,headers:[...t.headers,'新列'],widths:[...t.widths,1],rows:t.rows.map(row=>[...row,''])})}>新增列</button><button onClick={()=>onChange(tables.filter((_,i)=>i!==index))}>移除此表</button></div></div>)}<button onClick={()=>onChange([...tables,{headers:['项目','内容'],rows:[['','']],widths:[1,2]}])}>添加结构化表格</button></div>;
@@ -46,6 +47,8 @@ export default function App() {
     [plainBody, setPlainBody] = useState(""),
     [suggestions, setSuggestions] = useState(null),
     [selected, setSelected] = useState({});
+  const [pairing, setPairing] = useState("song-times");
+  useEffect(() => { setExportPairing(pairing); try { localStorage.setItem("reference-export-pairing", pairing); } catch {} }, [pairing]);
   useEffect(() => setModalError(""), [modal]);
   const input = useRef(null),
     templateInput = useRef(null);
@@ -672,6 +675,13 @@ export default function App() {
             <p className="preview-caption">预览展示正文内容；Word 根据页面尺寸自动分页。</p>
           </div>
           <footer className="export-panel">
+            <label>
+              导出前中西文配对
+              <select aria-label="中西文配对" value={pairing} onChange={(e) => setPairing(e.target.value)}>
+                {PAIRINGS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+              </select>
+            </label>
+            <p className="export-hint">同一份合同的中文用同一款，西文用同一款。Word 写入字体名，不把缺字悄悄换成别的字体。PDF 工作台才会嵌入字体并在缺字时停止。</p>
             <label className="check">
               <input
                 type="checkbox"

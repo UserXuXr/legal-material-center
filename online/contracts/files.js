@@ -61,13 +61,17 @@ export function draftReport(d) {
     changes: changes(d),
   };
 }
-export async function docxBytes(input) {
+export async function docxBytes(input, fonts = null, pairing = null) {
   const d = cleanDraft(input);
+  const ascii = fonts?.ascii || "Arial";
+  const eastAsia = fonts?.eastAsia || "Source Han Serif CN";
   cleanTemplate({ ...d.template, title: d.title, clauses: d.clauses });
   const missing = missingFields(d);
   if (missing.length) throw Error("请补全字段：" + missing.join("、"));
-  const content = renderDraft(d),
-    zip = new JSZip();
+  const content = renderDraft(d);
+  const {assertCovered} = await import("../shared/font-policy.js");
+  await assertCovered([d.title, ...content.clauses.flatMap(clause => [clause.title, clause.body])].join("\n"), pairing);
+  const zip = new JSZip();
   const longDocument = content.clauses.length >= 20;
   const toc = longDocument
     ? content.clauses
@@ -114,7 +118,7 @@ export async function docxBytes(input) {
   );
   zip.file(
     "word/styles.xml",
-    `<?xml version="1.0" encoding="UTF-8"?><w:styles xmlns:w="${W}"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Source Han Serif CN"/><w:sz w:val="24"/><w:color w:val="000000"/><w:lang w:val="zh-CN" w:eastAsia="zh-CN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="${longDocument ? 120 : 100}" w:line="${longDocument ? 400 : 360}" w:lineRule="exact"/><w:widowControl/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:jc w:val="both"/></w:pPr></w:style><w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/><w:spacing w:before="100" w:after="400" w:line="560" w:lineRule="exact"/><w:keepNext/></w:pPr><w:rPr><w:b/><w:sz w:val="40"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="220" w:after="100"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:sz w:val="24"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Contents"><w:name w:val="Contents"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="left"/><w:spacing w:after="50" w:line="320" w:lineRule="exact"/></w:pPr><w:rPr><w:sz w:val="21"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/></w:pPr></w:style><w:style w:type="paragraph" w:styleId="TableText"><w:name w:val="Table Text"/><w:basedOn w:val="Normal"/><w:pPr><w:snapToGrid w:val="0"/><w:jc w:val="left"/><w:spacing w:after="60" w:line="280" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="20"/></w:rPr></w:style></w:styles>`,
+    `<?xml version="1.0" encoding="UTF-8"?><w:styles xmlns:w="${W}"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="${ascii}" w:hAnsi="${ascii}" w:eastAsia="${eastAsia}"/><w:sz w:val="24"/><w:color w:val="000000"/><w:lang w:val="zh-CN" w:eastAsia="zh-CN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="${longDocument ? 120 : 100}" w:line="${longDocument ? 400 : 360}" w:lineRule="exact"/><w:widowControl/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:jc w:val="both"/></w:pPr></w:style><w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/><w:spacing w:before="100" w:after="400" w:line="560" w:lineRule="exact"/><w:keepNext/></w:pPr><w:rPr><w:b/><w:sz w:val="40"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="220" w:after="100"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:sz w:val="24"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Contents"><w:name w:val="Contents"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="left"/><w:spacing w:after="50" w:line="320" w:lineRule="exact"/></w:pPr><w:rPr><w:sz w:val="21"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/></w:pPr></w:style><w:style w:type="paragraph" w:styleId="TableText"><w:name w:val="Table Text"/><w:basedOn w:val="Normal"/><w:pPr><w:snapToGrid w:val="0"/><w:jc w:val="left"/><w:spacing w:after="60" w:line="280" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="20"/></w:rPr></w:style></w:styles>`,
   );
   zip.file(
     "word/header1.xml",
@@ -127,7 +131,9 @@ export async function docxBytes(input) {
   return zip.generateAsync({ type: "uint8array", compression: "DEFLATE" });
 }
 export async function exportContract(d, pack = false) {
-  const bytes = await docxBytes(d);
+  const {activePairing, officeFonts} = await import("../shared/font-policy.js");
+  const pairing = activePairing();
+  const bytes = await docxBytes(d, officeFonts(pairing), pairing);
   if (!pack) {
     download(
       bytes,

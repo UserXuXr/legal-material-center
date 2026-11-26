@@ -1,5 +1,5 @@
 import items from './workbenches.json';
-const $=s=>document.querySelector(s);const cards=new Map();const icons={scans:'扫',screenshots:'聊',materials:'材',business:'文',certificates:'证',finance:'财',rights:'权',contracts:'约',batch:'批'};const states={ready:'可使用'};
+const $=s=>document.querySelector(s);const cards=new Map();const icons={ 'reference-edit':'订',scans:'扫',screenshots:'聊',materials:'材',business:'文',certificates:'证',finance:'财',rights:'权',contracts:'约',batch:'批'};const states={ready:'可使用'};
 function render(items) {
   $('#module-count').textContent = items.length;
   $('#running-count').textContent = '均可在线使用';
